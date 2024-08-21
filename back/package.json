@@ -1,0 +1,22 @@
+{
+  "name": "projet-annuel",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcyannick1/projet-annuel.git"
+  },
+  "author": "Yannick, Rufus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcyannick1/projet-annuel/issues"
+  },
+  "homepage": "https://github.com/marcyannick1/projet-annuel#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
