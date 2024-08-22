@@ -20,7 +20,7 @@ model User {
   email        String   @unique
   password     String
   address      String
-  isSuperAdmin Boolean
+  isSuperAdmin Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
 }
