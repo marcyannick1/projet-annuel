@@ -17,6 +17,7 @@ app.use(
 );
 
 app.use("/", require("./routes/auth"))
+app.use("/user", require("./routes/user"))
 
 app.listen(process.env.SERVER_PORT, () => {
     console.log(`Serveur en écoute sur http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}`);
