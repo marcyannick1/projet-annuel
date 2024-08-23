@@ -47,12 +47,14 @@ export const AuthProvider = ({children}) => {
             url: "http://localhost:3000/login",
             data: formData
         }).then((response) => {
+            console.log(response)
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token);
-                navigate("/accueil")
+                navigate("/")
                 setError(null)
             }
         }).catch((e)=>{
+            console.error(e)
             setError(e.response.data.message)
         })
     }
