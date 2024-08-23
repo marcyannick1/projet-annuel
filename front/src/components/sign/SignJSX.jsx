@@ -3,16 +3,17 @@ import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
 import {Link} from 'react-router-dom';
 import { Input, DatePicker } from 'antd';
-// import dayjs from 'dayjs';
+import * as Yup from 'yup';
+import dayjs from 'dayjs';
 
 import objectSupport from 'dayjs/plugin/customParseFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {AuthContext} from "../../context/authContext.jsx";
 
-// dayjs.extend(customParseFormat);
-// dayjs.extend(objectSupport)
+dayjs.extend(customParseFormat);
+dayjs.extend(objectSupport)
 
-// const dateFormat = 'YYYY-MM-DD';
+const dateFormat = 'DD-MM-YYYY';
 
 // Définir les SVG et leurs textes associés
 const svgImages = [
@@ -356,7 +357,7 @@ const SignJSX = () => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        // birthday: '',
+        birthday: '',
         address: '',
         email: '',
         password: '',
@@ -370,12 +371,12 @@ const SignJSX = () => {
             [name]: value
         });
     };
-    // const handleDateChange = (date) => {
-    //     setFormData({
-    //         ...formData,
-    //         birthday: dayjs(date, dateFormat)
-    //     });
-    // };
+    const handleDateChange = (date) => {
+        setFormData({
+            ...formData,
+            birthday: new Date(date).toISOString()
+        });
+    };
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [message, setMessage] = useState('');
@@ -429,15 +430,14 @@ const SignJSX = () => {
                                 <label htmlFor="lastName">Nom</label>
                                 <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} />
                             </div>
-                            {/*<div>*/}
-                            {/*    <label htmlFor="username">Date de naissance</label>*/}
-                            {/*    <DatePicker*/}
-                            {/*        defaultValue={dayjs("2024-10-31", dateFormat)}*/}
-                            {/*        minDate={dayjs('2019-08-01', dateFormat)}*/}
-                            {/*        maxDate={dayjs('2024-10-31', dateFormat)}*/}
-                            {/*        onChange={(date)=>console.log(date)}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
+                            <div>
+                                <label htmlFor="username">Date de naissance</label>
+                                <DatePicker
+                                    maxDate={dayjs()}
+                                    format={dateFormat}
+                                    onChange={handleDateChange}
+                                />
+                            </div>
                             <div>
                                 <label htmlFor="address">Adresse</label>
                                 <Input id="address" name="address" value={formData.address} onChange={handleInputChange} />
