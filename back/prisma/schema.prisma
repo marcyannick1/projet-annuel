@@ -19,6 +19,7 @@ model User {
   lastName     String
   email        String   @unique
   password     String
+  birthday     DateTime
   address      String
   isSuperAdmin Boolean  @default(false)
   createdAt    DateTime @default(now())
