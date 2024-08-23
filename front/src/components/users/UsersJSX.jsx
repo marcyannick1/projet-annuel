@@ -128,7 +128,7 @@ const data = [
 
 const Users = () => {
   return (
-    <DashboardJSX>
+
       <div className="users-page">
         <h2>Utilisateurs</h2>
         <div className="actions">
@@ -137,12 +137,9 @@ const Users = () => {
           </Button>
           <FloatButton icon={<FileTextOutlined />} description="" onClick={() => console.log('onClick')} />
           <Button type="primary">Add new</Button>
-          <Button className="btn btn-secondary">Import members</Button>
-          <Button className="btn btn-secondary">Export members (Excel)</Button>
         </div>
         <Table columns={columns} dataSource={data} pagination={false} />
       </div>
-    </DashboardJSX>
   );
 };
 

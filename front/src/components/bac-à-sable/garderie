@@ -265,3 +265,95 @@ CSS
     color: #3631c3;
   }
   
+
+  HOME
+
+  import React from 'react';
+import { Card, Col, Row, Statistic, Divider, Button } from 'antd';
+import { UserOutlined, FileOutlined, MessageOutlined, ArrowUpOutlined } from '@ant-design/icons'; // Correction ici
+import './AccueilJSX.css';
+
+export default function AccueilJSX() {
+  return (
+    <div className='home-page contain'>
+      <h2 className='page-title'>Bienvenue sur le Dashboard</h2>
+      <p className='welcome-message'>Voici un aperçu rapide de vos activités récentes et des statistiques importantes.</p>
+      
+      <Row gutter={16}>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Utilisateurs Actifs"
+              value={1128}
+              prefix={<UserOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Fichiers Uploadés"
+              value={32}
+              prefix={<FileOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Messages Non Lu"
+              value={8}
+              prefix={<MessageOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Taux de Croissance"
+              value={4.5}
+              precision={2}
+              prefix={<ArrowUpOutlined />} // Utilisation d'une icône alternative
+              suffix="%"
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Divider />
+
+      <div className='quick-access'>
+        <h3>Accès Rapide</h3>
+        <Row gutter={16}>
+          <Col span={6}>
+            <Button type="primary" block>
+              <FileOutlined /> Voir les fichiers
+            </Button>
+          </Col>
+          <Col span={6}>
+            <Button type="default" block>
+              <MessageOutlined /> Messages
+            </Button>
+          </Col>
+          <Col span={6}>
+            <Button type="default" block>
+              <UserOutlined /> Utilisateurs
+            </Button>
+          </Col>
+          <Col span={6}>
+            <Button type="default" block>
+              <ArrowUpOutlined /> Statistiques
+            </Button>
+          </Col>
+        </Row>
+      </div>
+
+      <Divider />
+
+      <div className='notifications'>
+        <h3>Notifications</h3>
+        <p>Vous avez 3 nouvelles notifications.</p>
+      </div>
+    </div>
+  );
+}

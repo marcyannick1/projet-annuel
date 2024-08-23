@@ -5,6 +5,11 @@ import UsersJSX from './components/users/UsersJSX'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AccueilJSX from './components/accueil/AccueilJSX';
+import DashboardJSX from './components/dashboard/DashboardJSX';
+import EspaceStockageJSX from './components/espace-stockage/EspaceStockageJSX';
+import AchatEspaceJSX from './components/achat-espace/AchatEspaceJSX';
+import StatisitiquesJSX from './components/statistiques/StatisitiquesJSX';
 
 
 
@@ -14,15 +19,20 @@ function App() {
 
   return (
     <Router>
-    <div className="content">
-      <Routes>
-        <Route path='/UsersJSX' element={<UsersJSX />} />
+      <DashboardJSX>
+        <Routes>
+          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/UsersJSX" element={<UsersJSX />} />
+          <Route path="/AccueilJSX" element={<AccueilJSX />} />
+          <Route path="/EspaceStockageJSX" element={<EspaceStockageJSX />} />
+          <Route path="/AchatEspaceJSX" element={<AchatEspaceJSX />} />
+          <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX />} />
 
 
 
-      </Routes>
-    </div>
-  </Router>
+        </Routes>
+      </DashboardJSX>
+    </Router>
   )
 }
 

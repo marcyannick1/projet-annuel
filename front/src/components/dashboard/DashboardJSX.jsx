@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleUser, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faCircleUser, faChevronDown, faChevronUp, faCartShopping, faHome } from '@fortawesome/free-solid-svg-icons';
 import {
   AppstoreOutlined,
   ContainerOutlined,
@@ -9,26 +9,34 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PieChartOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import './DashboardJSX.css';
+import { Link } from 'react-router-dom';
 
 // Données du menu
 const items = [
   {
-    key: '1',
-    icon: <PieChartOutlined />,
-    label: 'Statistiques',
+    key: 'home',  // Clé unique pour l'élément Home
+    icon: <FontAwesomeIcon icon={faHome} />,  // Icône Home
+    label: <Link to="/AccueilJSX">Home</Link>,
   },
   {
-    key: '2',
+    key: '1',
     icon: <DesktopOutlined />,
-    label: 'Dashboard',
+    label: <Link to="/UsersJSX">Dashboard</Link>,
   },
   {
     key: '3',
-    icon: <ContainerOutlined />,
-    label: 'Fichiers',
+    icon: <PieChartOutlined />,
+    label: <Link to="/StatisitiquesJSX">Statistiques</Link>,
+  },
+  {
+    key: '2',
+    icon: < ContainerOutlined/>,
+    label: <Link to="/EspaceStockageJSX">Espaces de Stockage</Link>,
+
   },
   {
     key: 'sub1',
@@ -55,32 +63,14 @@ const items = [
   },
   {
     key: 'sub2',
-    label: 'Navigation Two',
-    icon: <AppstoreOutlined />,
-    children: [
-      {
-        key: '9',
-        label: 'Option 9',
-      },
-      {
-        key: '10',
-        label: 'Option 10',
-      },
-      {
-        key: 'sub3',
-        label: 'Submenu',
-        children: [
-          {
-            key: '11',
-            label: 'Option 11',
-          },
-          {
-            key: '12',
-            label: 'Option 12',
-          },
-        ],
-      },
-    ],
+    label: <Link to="/AchatEspaceJSX">Achat Espace</Link>,
+    icon: <FontAwesomeIcon icon={faCartShopping} />, // Icône de panier d'achat
+  },
+  {
+    key: 'logout', // Clé unique pour l'élément de déconnexion
+    icon: <LogoutOutlined />, // Icône de déconnexion
+    label: 'Logout',
+    style: { position: 'absolute', bottom: 0, width: '100%' } // Position en bas du menu
   },
 ];
 
@@ -94,6 +84,13 @@ const DashboardJSX = ({ children }) => {
 
   const toggleRoleVisibility = () => {
     setRoleVisible(!roleVisible); // Basculer la visibilité du rôle
+  };
+
+  const handleMenuClick = ({ key }) => {
+    if (key === 'logout') {
+      // Logique de déconnexion ici
+      console.log('Logout clicked');
+    }
   };
 
   return (
@@ -111,7 +108,8 @@ const DashboardJSX = ({ children }) => {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           <Menu
-            defaultSelectedKeys={['1']}
+            onClick={handleMenuClick} // Gestion des clics sur les éléments du menu
+            defaultSelectedKeys={['home']} // Sélectionne "Home" par défaut
             defaultOpenKeys={['sub1']}
             mode="inline"
             theme="dark"
