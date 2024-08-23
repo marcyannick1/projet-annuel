@@ -5,7 +5,7 @@ const {generateToken} = require("../utils/jwt");
 const prisma = new PrismaClient();
 
 const register = async(req, res) => {
-    const { firstName, lastName, email, password, address } = req.body;
+    const { firstName, lastName, email, password, address, birthday } = req.body;
     try {
         const user = await prisma.user.create({
             data: {
@@ -13,7 +13,8 @@ const register = async(req, res) => {
                 lastName,
                 email,
                 password: hashPassword(password),
-                address
+                address,
+                birthday
             }
         })
         res.status(201).json(user)
