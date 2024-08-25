@@ -1,24 +1,16 @@
-import {useState, useEffect, useContext} from 'react';
+import {useContext} from 'react';
 import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
 import {Link} from 'react-router-dom';
-import { Input, DatePicker } from 'antd';
-import * as Yup from 'yup';
-import dayjs from 'dayjs';
-
-import objectSupport from 'dayjs/plugin/customParseFormat';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
 import {AuthContext} from "../../context/authContext.jsx";
-
-dayjs.extend(customParseFormat);
-dayjs.extend(objectSupport)
-
-const dateFormat = 'DD-MM-YYYY';
+import {Field, Form, Formik} from "formik";
+import {SignupSchema} from "../../schemas/signupSchema.js";
 
 // Définir les SVG et leurs textes associés
 const svgImages = [
     {
-        svg: <svg key="1" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" width="889.07556" height="459.37952"
+        svg: <svg key="1" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"
                   viewBox="0 0 889.07556 459.37952" xmlns:xlink="http://www.w3.org/1999/xlink">
             <title>welcome_cats</title>
             <ellipse cx="444.53778" cy="398.16856" rx="444.53778" ry="12.43462" fill="#e6e6e6"/>
@@ -148,7 +140,7 @@ const svgImages = [
         text: "Créez un compte pour découvrir des contenus exclusifs et rejoindre une communauté dynamique."
     },
     {
-        svg: <svg key="2" xmlns="http://www.w3.org/2000/svg" width="511.56264" height="532.44842"
+        svg: <svg key="2" xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 511.56264 532.44842" xmlns:xlink="http://www.w3.org/1999/xlink">
             <polygon
                 points="454.49103 405.20843 454.48102 405.44842 466.49103 532.44842 378.85101 532.44842 367.49103 454.44842 362.49103 530.44842 272.49103 529.44842 282.05103 429.66839 290.18103 383.41839 290.18103 383.40838 291.401 376.44842 452.10101 376.44842 452.31103 378.96838 454.49103 405.20843"
@@ -215,7 +207,7 @@ const svgImages = [
         text: " En quelques étapes simples, complétez votre inscription et accédez à toutes nos fonctionnalités."
     },
     {
-        svg: <svg key="3" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" width="930" height="609.87353"
+        svg: <svg key="3" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"
                   viewBox="0 0 930 609.87353" xmlns:xlink="http://www.w3.org/1999/xlink">
             <path id="f5877e54-26d9-4110-bb17-7d90037dcb2b-565" data-name="Path 438"
                   d="M176.062,706.84891a24.21462,24.21462,0,0,0,23.38269-4.11877c8.18977-6.87442,10.758-18.196,12.8467-28.68191l6.17973-31.01657L205.53341,651.94c-9.30465,6.40642-18.81826,13.01867-25.26011,22.29786s-9.25223,21.94707-4.07792,31.988"
@@ -353,132 +345,114 @@ const svgImages = [
 ];
 
 const SignJSX = () => {
-    const { register } = useContext(AuthContext)
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        birthday: '',
-        address: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
+    const {register, error} = useContext(AuthContext)
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
-    const handleDateChange = (date) => {
-        setFormData({
-            ...formData,
-            birthday: new Date(date).toISOString()
-        });
-    };
-
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState('');
-
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex === svgImages.length - 1 ? 0 : prevIndex + 1));
-        }, 7000); // Changer toutes les 7 secondes
-
-        return () => clearInterval(interval); // Nettoyer l'intervalle lors du démontage du composant
-    }, []);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Form Data:', formData);
-        register(formData)
-    };
-
-
-    const handlePrev = () => {
-        setCurrentIndex((prevIndex) => (prevIndex === 0 ? svgImages.length - 1 : prevIndex - 1));
-    };
-
-    const handleNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex === svgImages.length - 1 ? 0 : prevIndex + 1));
-    };
+    const ErrorMessage = ({children}) => {
+        return (
+            <div style={{color: "crimson", fontSize: 12}}>{children}</div>
+        )
+    }
 
     return (
-        <div className="contents">
+        <>
             <div className="back">
                 <BackgroundJSX/>
             </div>
-            <div className="contain ">
-                <div className="connexion">
-                    <div className="login-container ">
-                        {message && (
-                            <div className={`alert alert-${messageType} mt-3`} role="alert">
-                                {message}
-                            </div>
+            <div className="content">
+                <div className="form">
+                    <h2>S'inscrire</h2>
+                    <Formik
+                        initialValues={{
+                            firstName: '',
+                            lastName: '',
+                            birthday: null,
+                            address: '',
+                            email: '',
+                            password: '',
+                            confirmPassword: '',
+                        }}
+                        validationSchema={SignupSchema}
+                        onSubmit={(values) => {
+                            console.log('Form data:', values);
+                            register(values)
+                        }}
+                    >
+                        {({setFieldValue, errors, touched}) => (
+                            <Form className="login-form">
+                                <div>
+                                    <label htmlFor="firstName">Prénom</label>
+                                    <Field name="firstName" as={Input} id="firstName"
+                                           status={errors.firstName && touched.firstName ? "error" : null}/>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="lastName">Nom</label>
+                                    <Field name="lastName" as={Input} id="lastName"
+                                           status={errors.lastName && touched.lastName ? "error" : null}/>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="birthday">Date de naissance</label>
+                                    <DatePicker
+                                        format="DD/MM/YYYY"
+                                        onChange={(date) => setFieldValue('birthday', date ? date.toDate().toISOString() : null)}
+                                        style={{width: "100%"}}
+                                        status={errors.birthday && touched.birthday ? "error" : null}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="address">Adresse</label>
+                                    <Field name="address" as={Input} id="address"
+                                           status={errors.address && touched.address ? "error" : null}/>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="email">Adresse mail</label>
+                                    <Field name="email" as={Input} id="email"
+                                           status={errors.email && touched.email ? "error" : null}/>
+                                    <ErrorMessage>
+                                        {errors.email && touched.email ? errors.email : null}
+                                    </ErrorMessage>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="password">Mot de passe</label>
+                                    <Field name="password" as={Input.Password} id="password"
+                                           status={errors.password && touched.password ? "error" : null}/>
+                                    <ErrorMessage>
+                                        {errors.password && touched.password ? errors.password : null}
+                                    </ErrorMessage>
+                                </div>
+
+                                <div>
+                                    <label htmlFor="confirmPassword">Confirmez le mot de passe</label>
+                                    <Field name="confirmPassword" as={Input.Password} id="confirmPassword"
+                                           status={errors.confirmPassword && touched.confirmPassword ? "error" : null}/>
+                                    <ErrorMessage>
+                                        {errors.confirmPassword && touched.confirmPassword ? errors.confirmPassword : null}
+                                    </ErrorMessage>
+                                </div>
+                                <Button type="primary" htmlType="submit">S'inscrire</Button>
+                            </Form>
                         )}
+                    </Formik>
 
-                        <h2>S'inscrire</h2>
-                        <form onSubmit={handleSubmit} className="login-form">
-                            <div>
-                                <label htmlFor="firstName">Prenom</label>
-                                <Input id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
-                            </div>
-                            <div>
-                                <label htmlFor="lastName">Nom</label>
-                                <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} />
-                            </div>
-                            <div>
-                                <label htmlFor="username">Date de naissance</label>
-                                <DatePicker
-                                    maxDate={dayjs()}
-                                    format={dateFormat}
-                                    onChange={handleDateChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="address">Adresse</label>
-                                <Input id="address" name="address" value={formData.address} onChange={handleInputChange} />
-                            </div>
-                            <div>
-                                <label htmlFor="email">Adresse mail</label>
-                                <Input id="email" name="email" value={formData.email} onChange={handleInputChange} />
-                            </div>
-                            <div>
-                                <label htmlFor="password">Mot de passe</label>
-                                <Input.Password id="password" name="password" value={formData.password} onChange={handleInputChange}/>
-                            </div>
-                            <div>
-                                <label htmlFor="confirmPassword">Confirmez le mot de passe</label>
-                                <Input.Password id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange}/>
-                            </div>
-
-                            <button type="submit" className="login-button">S'inscrire</button>
-                        </form>
-
-                        <p className='lien-sign'>
-                            Déjà un compte ?{' '}
-                            <Link to="/" className="create-account-link">Se Connecter</Link>
-                        </p>
-                    </div>
+                    <p className='lien-sign'>
+                        Déjà un compte ?{' '}
+                        <Link to="/" className="create-account-link">Se Connecter</Link>
+                    </p>
+                    {error &&
+                        <Alert message={error} type="error" showIcon/>
+                    }
                 </div>
-                <div className="my-svg">
-                    <div className="carousel">
-                        <button className="carousel-button prev" onClick={handlePrev}>‹</button>
-                        <div className="carousel-image">
-                            {svgImages[currentIndex].svg}
-                            <div className="desc">
-                                <label className="carousel-text">{svgImages[currentIndex].label}</label>
-                                <p className="carousel-text">{svgImages[currentIndex].text}</p>
-                            </div>
-                        </div>
-                        <button className="carousel-button next" onClick={handleNext}>›</button>
-                    </div>
+                <div className="carousel-container">
+                    <Carousel arrows autoplay className="carousel">
+                        {svgImages.map((svg, idx) => <div key={idx}>{svg.svg}</div>)}
+                    </Carousel>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -36,7 +36,9 @@ export const AuthProvider = ({children}) => {
                 navigate("/")
             }
         }).catch((error) => {
-            setError("Email deja utilisé")
+            if (error.response.data.code === "P2002") {
+                setError("Email deja utilisé")
+            }
             console.log(error)
         })
     }
@@ -53,7 +55,7 @@ export const AuthProvider = ({children}) => {
                 navigate("/")
                 setError(null)
             }
-        }).catch((e)=>{
+        }).catch((e) => {
             console.error(e)
             setError(e.response.data.message)
         })
