@@ -56,8 +56,9 @@ export const AuthProvider = ({children}) => {
                 setError(null)
             }
         }).catch((e) => {
-            console.error(e)
-            setError(e.response.data.message)
+            if (e.response.status === 401) {
+                setError("Email ou mot de passe incorrect")
+            }
         })
     }
 
