@@ -21,11 +21,11 @@ const deleteUser = async(req, res) => {
     const {id} = req.params;
 
     try {
-        const animal = await prisma.user.delete({
+        const user = await prisma.user.delete({
             where: {id: parseInt(id)}
         })
 
-        res.status(200).send("Utilisateur supprimé avec succès")
+        res.status(200).json(user)
     } catch (e) {
         console.error(e)
         res.status(500).json(e)
