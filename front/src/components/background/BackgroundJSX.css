@@ -1,0 +1,23 @@
+.background {
+    position: fixed; /* Assure que le fond couvre tout l'écran */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Prend toute la largeur de la vue */
+    height: 100vh; /* Prend toute la hauteur de la vue */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .red-half, .blue-half {
+    flex: 1; /* Chaque div prend 50% de la hauteur du parent */
+    width: 100%; /* Prend toute la largeur de la vue */
+  }
+  
+  .red-half {
+    background-color: #3631c3;
+  }
+  
+  .blue-half {
+    background-color: #ecf0fb;
+  }
+  
