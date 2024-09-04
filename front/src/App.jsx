@@ -10,6 +10,7 @@ import DashboardJSX from './components/dashboard/DashboardJSX';
 import EspaceStockageJSX from './components/espace-stockage/EspaceStockageJSX';
 import AchatEspaceJSX from './components/achat-espace/AchatEspaceJSX';
 import StatisitiquesJSX from './components/statistiques/StatisitiquesJSX';
+import FacturesJSX from './components/factures/FacturesJSX';
 
 
 
@@ -21,10 +22,11 @@ function App() {
     <Router>
       <DashboardJSX>
         <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<AccueilJSX />} />
           <Route path="/UsersJSX" element={<UsersJSX />} />
           <Route path="/AccueilJSX" element={<AccueilJSX />} />
           <Route path="/EspaceStockageJSX" element={<EspaceStockageJSX />} />
+          <Route path="/FacturesJSX" element={<FacturesJSX />} />
           <Route path="/AchatEspaceJSX" element={<AchatEspaceJSX />} />
           <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX />} />
 

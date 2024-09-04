@@ -130,7 +130,8 @@ const Users = () => {
   return (
 
       <div className="users-page">
-        <h2>Utilisateurs</h2>
+              <h2 className='page-title'>Utilisateurs</h2>
+
         <div className="actions">
           <Button type="primary" icon={<DownloadOutlined />}>
             Download

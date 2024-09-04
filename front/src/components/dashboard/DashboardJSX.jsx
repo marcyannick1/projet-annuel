@@ -5,6 +5,7 @@ import {
   AppstoreOutlined,
   ContainerOutlined,
   DesktopOutlined,
+  FileTextOutlined,
   MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -60,6 +61,11 @@ const items = [
         label: 'Changez votre mot de passe',
       },
     ],
+  }
+  ,{
+    key: 'sub3',
+    label: <Link to="/FacturesJSX">Mes factures</Link>,
+    icon: <FileTextOutlined />, // Icône de factures d'Ant Design
   },
   {
     key: 'sub2',
