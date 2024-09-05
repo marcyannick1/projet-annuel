@@ -8,16 +8,16 @@
     flex-direction: column;
   }
   
-  .red-half, .blue-half {
+  .blue, .white {
     flex: 1; /* Chaque div prend 50% de la hauteur du parent */
     width: 100%; /* Prend toute la largeur de la vue */
   }
   
-  .red-half {
+  .blue {
     background-color: #3631c3;
   }
   
-  .blue-half {
+  .white {
     background-color: #ecf0fb;
   }
   

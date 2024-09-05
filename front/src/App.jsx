@@ -1,52 +1,37 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import './App.css'
 import UsersJSX from './components/users/UsersJSX'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AccueilJSX from './components/accueil/AccueilJSX';
-import DashboardJSX from './components/dashboard/DashboardJSX';
-import EspaceStockageJSX from './components/espace-stockage/EspaceStockageJSX';
-import AchatEspaceJSX from './components/achat-espace/AchatEspaceJSX';
-import StatisitiquesJSX from './components/statistiques/StatisitiquesJSX';
-import FacturesJSX from './components/factures/FacturesJSX';
-import ProfilJSX from './components/profil/ProfilJSX';
+import Accueil from './components/accueil/Accueil.jsx';
+import EspaceStockage from './components/espace-stockage/EspaceStockage.jsx';
+import AchatEspace from './components/achat-espace/AchatEspace.jsx';
+import Statistiques from './components/statistiques/Statistiques.jsx';
+import Factures from './components/factures/Factures.jsx';
 
-
-
-import LoginJSX from './components/login/LoginJSX'
-import SignJSX from './components/sign/SignJSX'
-import BackgroundJSX from './components/background/BackgroundJSX'
+import LoginJSX from './components/login/Login.jsx'
+import Sign from './components/sign/Sign.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-
+import SideBar from "./components/SideBar.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+    return (
+        <>
+            <SideBar/>
+            <Routes>
+                <Route path="/" element={<Accueil/>}/>
+                <Route path='/login' element={<LoginJSX/>}/>
+                <Route path='/register' element={<Sign/>}/>
+                <Route path="/UsersJSX" element={<UsersJSX/>}/>
+                <Route path="/EspaceStockage" element={<EspaceStockage/>}/>
+                <Route path="/Factures" element={<Factures/>}/>
+                <Route path="/AchatEspace" element={<AchatEspace/>}/>
+                <Route path="/Statistiques" element={<Statistiques/>}/>
+            </Routes>
+        </>
 
-  return (
-    <Router>
-      <DashboardJSX>
-        <Routes>
-          <Route path="/" element={<AccueilJSX />} />
-          <Route path="/UsersJSX" element={<UsersJSX />} />
-          <Route path="/AccueilJSX" element={<AccueilJSX />} />
-          <Route path="/EspaceStockageJSX" element={<EspaceStockageJSX />} />
-          <Route path="/FacturesJSX" element={<FacturesJSX />} />
-          <Route path="/AchatEspaceJSX" element={<AchatEspaceJSX />} />
-          <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX />} />
-          <Route path="/ProfilJSX" element={<ProfilJSX />} />
-
-
-
-
-
-        </Routes>
-      </DashboardJSX>
-    </Router>
-  )
-
+    )
 }
 
 export default App
