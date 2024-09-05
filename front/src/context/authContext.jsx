@@ -33,7 +33,7 @@ export const AuthProvider = ({children}) => {
             data: formData
         }).then((response) => {
             if (response.status === 201) {
-                navigate("/")
+                navigate("/login")
             }
         }).catch((error) => {
             if (error.response.data.code === "P2002") {

@@ -1,14 +1,14 @@
-.espace-stockage {
+.espace_stockage {
     padding: 20px;
     background-color: #fff;
-  }
-  
-  .espace-stockage h2 {
+}
+
+.espace_stockage h2 {
     text-align: center;
     margin-bottom: 20px;
-  }
-  
-  .espace-stockage .ant-table {
+}
+
+.espace_stockage .ant-table {
     margin-top: 20px;
-  }
+}
   

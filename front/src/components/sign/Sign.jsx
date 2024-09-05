@@ -1,6 +1,6 @@
 import {useContext} from 'react';
-import './SignJSX.css';
-import BackgroundJSX from '../background/BackgroundJSX';
+import styles from './Sign.module.css';
+import Background from '../background/Background.jsx';
 import {Link} from 'react-router-dom';
 import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
 import {AuthContext} from "../../context/authContext.jsx";
@@ -28,7 +28,7 @@ const svgImages = [
     }
 ];
 
-const SignJSX = () => {
+const Sign = () => {
     const {register, error} = useContext(AuthContext)
 
     const ErrorMessage = ({children}) => {
@@ -39,11 +39,9 @@ const SignJSX = () => {
 
     return (
         <>
-            <div className="back">
-                <BackgroundJSX/>
-            </div>
-            <div className="content">
-                <div className="form-container">
+            <Background/>
+            <div className={styles.content}>
+                <div className={styles.form_container}>
                     <h2>S'inscrire</h2>
                     <Formik
                         initialValues={{
@@ -62,7 +60,7 @@ const SignJSX = () => {
                         }}
                     >
                         {({setFieldValue, errors, touched}) => (
-                            <Form className="login-form">
+                            <Form className={styles.login_form}>
                                 <div>
                                     <label htmlFor="firstName">Prénom</label>
                                     <Field name="firstName" as={Input} id="firstName"
@@ -123,16 +121,16 @@ const SignJSX = () => {
                         )}
                     </Formik>
 
-                    <p className='lien-sign'>
+                    <p className={styles.lien_sign}>
                         Déjà un compte ?{' '}
-                        <Link to="/" className="create-account-link">Se Connecter</Link>
+                        <Link to="/login">Se Connecter</Link>
                     </p>
                     {error &&
                         <Alert message={error} type="error" showIcon/>
                     }
                 </div>
-                <div className="carousel-container">
-                    <div className="carousel">
+                <div className={styles.carousel_container}>
+                    <div className={styles.carousel}>
                         <Carousel autoplay>
                             {svgImages.map((svg, idx) =>
                                 <div key={idx}>
@@ -149,4 +147,4 @@ const SignJSX = () => {
     );
 };
 
-export default SignJSX;
+export default Sign;

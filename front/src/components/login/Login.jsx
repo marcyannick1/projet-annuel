@@ -1,6 +1,6 @@
 import {useContext} from 'react';
-import './LoginJSX.css';
-import BackgroundJSX from '../background/BackgroundJSX';
+import styles from './Login.module.css';
+import Background from '../background/Background.jsx';
 import {Link} from 'react-router-dom';
 import {Input, Button, Carousel, Alert} from 'antd';
 import {AuthContext} from "../../context/authContext.jsx";
@@ -39,11 +39,9 @@ const SignJSX = () => {
 
     return (
         <>
-            <div className="back">
-                <BackgroundJSX/>
-            </div>
-            <div className="content">
-                <div className="form-container">
+            <Background/>
+            <div className={styles.content}>
+                <div className={styles.form}>
                     <h2>Se connecter</h2>
                     <Formik
                         initialValues={{
@@ -57,7 +55,7 @@ const SignJSX = () => {
                         }}
                     >
                         {({errors, touched}) => (
-                            <Form className="login-form">
+                            <Form className={styles.login_form}>
                                 <div>
                                     <label htmlFor="email">Adresse mail</label>
                                     <Field name="email" as={Input} id="email"
@@ -80,16 +78,16 @@ const SignJSX = () => {
                         )}
                     </Formik>
 
-                    <p className='lien-sign'>
+                    <p className={styles.lien_sign}>
                         Vous n'avez pas de compte?{' '}
-                        <Link to="/SignJsx" className="create-account-link">S'inscrire</Link>
+                        <Link to="/register" className="create-account-link">S'inscrire</Link>
                     </p>
                     {error &&
                         <Alert message={error} type="error" showIcon/>
                     }
                 </div>
-                <div className="carousel-container">
-                    <div className="carousel">
+                <div className={styles.carousel_container}>
+                    <div className={styles.carousel}>
                         <Carousel autoplay>
                             {svgImages.map((svg, idx) =>
                                 <div key={idx}>
