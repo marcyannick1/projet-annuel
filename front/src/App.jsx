@@ -15,6 +15,12 @@ import ProfilJSX from './components/profil/ProfilJSX';
 
 
 
+import LoginJSX from './components/login/LoginJSX'
+import SignJSX from './components/sign/SignJSX'
+import BackgroundJSX from './components/background/BackgroundJSX'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -40,6 +46,7 @@ function App() {
       </DashboardJSX>
     </Router>
   )
+
 }
 
 export default App

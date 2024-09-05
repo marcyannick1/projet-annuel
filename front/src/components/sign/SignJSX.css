@@ -1,0 +1,64 @@
+.content {
+    display: flex;
+    min-height: 500px;
+    max-width: 800px;
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    background-color: #f7f7f7;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.form-container {
+    width: 50%;
+    padding: 40px;
+    align-self: center;
+}
+
+.form-container h2 {
+    text-align: center;
+}
+
+.form-container button {
+    margin: 10px 0
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.carousel-container {
+    width: 50%;
+    text-align: center;
+    background-color: #eaedfe;
+    border-radius: 0 15px 15px 0;
+}
+
+.carousel {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.carousel h3{
+    font-size: 24px;
+    margin: 10px 0
+}
+
+.carousel svg{
+    max-width: 90%;
+}
+
+.lien-sign{
+    text-align: center;
+}
+
+.svg-container{
+    text-align: center;
+}
