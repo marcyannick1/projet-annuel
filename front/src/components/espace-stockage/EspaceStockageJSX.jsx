@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Upload, message, Popconfirm, Empty, Input, Select } from 'antd';
+import { Table, Button, Upload, message, Popconfirm, Empty, Input, Select, Typography, Space } from 'antd';
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import './EspaceStockageJSX.css';
 
 const { Option } = Select;
+const { Title } = Typography;
 
 export default function EspaceStockageJSX() {
   const [files, setFiles] = useState([]);
-  const [filteredFiles, setFilteredFiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFormat, setSelectedFormat] = useState(null);
 
-  // Fonction pour charger les fichiers existants
   const fetchFiles = () => {
-    // Simuler un appel API pour récupérer les fichiers
     const mockFiles = [
-      // Exemple de fichiers avec dates d'upload et formats
       { key: '1', name: 'Document1.pdf', size: '50KB', format: 'pdf', date: new Date('2024-01-10') },
       { key: '2', name: 'Image1.jpg', size: '200KB', format: 'jpg', date: new Date('2024-01-15') },
       { key: '3', name: 'Presentation.ppt', size: '120KB', format: 'ppt', date: new Date('2024-01-20') },
@@ -23,54 +20,43 @@ export default function EspaceStockageJSX() {
     setFiles(mockFiles);
   };
 
-  // Fonction pour uploader un fichier
   const handleUpload = (file) => {
     const newFile = {
       key: `${files.length + 1}`,
       name: file.name,
       size: `${(file.size / 1024).toFixed(2)}KB`,
       format: file.name.split('.').pop(),
-      date: new Date(), // Date actuelle comme exemple
+      date: new Date(),
     };
     setFiles([...files, newFile]);
     message.success(`${file.name} a été téléchargé avec succès.`);
   };
 
-  // Fonction pour supprimer un fichier
   const handleDelete = (key) => {
     const updatedFiles = files.filter((file) => file.key !== key);
     setFiles(updatedFiles);
     message.success('Fichier supprimé avec succès.');
   };
 
-  // Fonction pour gérer la recherche
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Fonction pour gérer le filtre par format
   const handleFormatChange = (value) => {
     setSelectedFormat(value);
   };
 
-  // Filtrage et tri des fichiers
   const processFiles = () => {
     let processedFiles = [...files];
-
-    // Filtrage par format
     if (selectedFormat) {
       processedFiles = processedFiles.filter(file => file.format === selectedFormat);
     }
-
-    // Recherche par nom de fichier
     if (searchTerm) {
       processedFiles = processedFiles.filter(file => file.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
-
     return processedFiles;
   };
 
-  // Colonnes de la table avec tri par date et taille
   const columns = [
     {
       title: 'Nom du fichier',
@@ -114,18 +100,18 @@ export default function EspaceStockageJSX() {
   }, []);
 
   return (
-    <div className='espace-stockage contain '>
-      <h2>Espace de Stockage</h2>
+    <div className='espace-stockage-container contain'>
+      <Title level={2} className="title">Espace de Stockage</Title>
       <div className="filters">
         <Input
           placeholder="Rechercher par nom de fichier"
           onChange={handleSearch}
-          style={{ marginBottom: 16, width: 200 }}
+          style={{ width: 250 }}
         />
         <Select
           placeholder="Filtrer par format"
           onChange={handleFormatChange}
-          style={{ marginBottom: 16, width: 200 }}
+          style={{ width: 250 }}
         >
           <Option value={null}>Tous les formats</Option>
           <Option value="pdf">PDF</Option>
@@ -141,7 +127,7 @@ export default function EspaceStockageJSX() {
           }}
           showUploadList={false}
         >
-          <Button icon={<UploadOutlined />}>Uploader un fichier</Button>
+          <Button icon={<UploadOutlined />} type="primary">Uploader un fichier</Button>
         </Upload>
       </div>
       
@@ -149,10 +135,10 @@ export default function EspaceStockageJSX() {
         <Table
           columns={columns}
           dataSource={processFiles()}
-          style={{ marginTop: 20 }}
+          className="espace-stockage-table"
         />
       ) : (
-        <div style={{ marginTop: 20, textAlign: 'center' }}>
+        <div className="empty-container">
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Aucun fichier disponible" />
         </div>
       )}

@@ -78,7 +78,7 @@ const StatistiquesJSX = () => {
 
       <Row gutter={16} style={{ marginTop: 20 }}>
         <Col span={12}>
-          <Card title="Répartition des Fichiers par Client">
+          <Card title="Répartition des Fichiers par Client" style={{ height: "600px" }}>
             {filesByClient.length > 0 ? (
               <Pie
                 data={filesByClient.map(client => ({

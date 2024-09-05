@@ -1,14 +1,33 @@
-.espace-stockage {
-    padding: 20px;
-    background-color: #fff;
-  }
-  
-  .espace-stockage h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .espace-stockage .ant-table {
-    margin-top: 20px;
-  }
-  
+.espace-stockage-container {
+  padding: 30px;
+  background-color: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  color: #13c2c2;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.espace-stockage-table {
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.empty-container {
+  margin-top: 20px;
+  text-align: center;
+}

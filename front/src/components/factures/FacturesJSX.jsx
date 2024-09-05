@@ -1,12 +1,11 @@
 import React from 'react';
-import { Table, Button, Typography, Space } from 'antd';
-import { DownloadOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Table, Button, Typography, Space, Card } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 import './FacturesJSX.css';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const FacturesJSX = () => {
-  // Exemple de données de facture
   const dataSource = [
     {
       key: '1',
@@ -26,7 +25,6 @@ const FacturesJSX = () => {
         siret: '123 456 789 00010',
       },
     },
-    // Ajouter plus de factures si nécessaire
   ];
 
   const columns = [
@@ -73,32 +71,31 @@ const FacturesJSX = () => {
 
   return (
     <div className="factures-container contain">
-      <Title level={2}>Mes Factures</Title>
+      <Title level={2} className="title">Mes Factures</Title>
       <Table
         dataSource={dataSource}
         columns={columns}
         pagination={false}
-        style={{ marginTop: 20, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+        className="factures-table"
       />
-      {/* Plus d'informations sur la facture */}
-      <Space direction="vertical" style={{ marginTop: 40 }}>
+      <Card className="factures-card">
         <Title level={4}>Informations Client</Title>
-        <p>Nom: {dataSource[0].client.name}</p>
-        <p>Adresse: {dataSource[0].client.address}</p>
+        <Text>Nom: {dataSource[0].client.name}</Text><br />
+        <Text>Adresse: {dataSource[0].client.address}</Text>
 
         <Title level={4}>Informations Société</Title>
-        <p>Nom: {dataSource[0].company.name}</p>
-        <p>Adresse: {dataSource[0].company.address}</p>
-        <p>SIRET: {dataSource[0].company.siret}</p>
+        <Text>Nom: {dataSource[0].company.name}</Text><br />
+        <Text>Adresse: {dataSource[0].company.address}</Text><br />
+        <Text>SIRET: {dataSource[0].company.siret}</Text>
 
         <Title level={4}>Détails de la Facture</Title>
-        <p>Date: {dataSource[0].date}</p>
-        <p>Désignation: {dataSource[0].designation}</p>
-        <p>Quantité: {dataSource[0].quantity}</p>
-        <p>Prix Unitaire HT: {dataSource[0].price}</p>
-        <p>Montant TVA: {dataSource[0].tva}</p>
-        <p>Total TTC: {dataSource[0].total}</p>
-      </Space>
+        <Text>Date: {dataSource[0].date}</Text><br />
+        <Text>Désignation: {dataSource[0].designation}</Text><br />
+        <Text>Quantité: {dataSource[0].quantity}</Text><br />
+        <Text>Prix Unitaire HT: {dataSource[0].price}</Text><br />
+        <Text>Montant TVA: {dataSource[0].tva}</Text><br />
+        <Text>Total TTC: {dataSource[0].total}</Text>
+      </Card>
     </div>
   );
 };

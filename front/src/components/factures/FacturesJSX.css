@@ -1,20 +1,37 @@
 .factures-container {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-  }
-  
-  .factures-container .ant-table {
-    margin-top: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .factures-container .ant-space-vertical {
-    margin-top: 40px;
-  }
-  
-  .factures-container h4 {
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  color: #13c2c2;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.factures-table {
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.factures-card {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.factures-card h4 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.factures-card p {
+  color: #666;
+  margin-bottom: 5px;
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Importer Link de react-router-dom
 import { Card, Col, Row, Statistic, Divider, Button } from 'antd';
 import { UserOutlined, FileOutlined, MessageOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import './AccueilJSX.css';
@@ -60,9 +61,12 @@ export default function AccueilJSX() {
         <h3>Accès Rapide</h3>
         <Row gutter={16}>
           <Col span={6}>
+          <Link to="/EspaceStockageJSX"> {/* Utilise Link pour créer un lien vers la route */}
             <Button type="primary" block style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}>
               <FileOutlined style={{ color: '#fff' }} /> Voir les fichiers
             </Button>
+      </Link>
+
           </Col>
           <Col span={6}>
             <Button type="default" block style={{ borderColor: '#40a9ff' }}>
@@ -70,14 +74,21 @@ export default function AccueilJSX() {
             </Button>
           </Col>
           <Col span={6}>
+          <Link to="/UsersJSX"> {/* Utilise Link pour créer un lien vers la route */}
             <Button type="default" block style={{ borderColor: '#13c2c2' }}>
               <UserOutlined style={{ color: '#13c2c2' }} /> Utilisateurs
             </Button>
+      </Link>
+
           </Col>
           <Col span={6}>
-            <Button type="default" block style={{ borderColor: '#faad14' }}>
-              <ArrowUpOutlined style={{ color: '#faad14' }} /> Statistiques
-            </Button>
+          
+
+          <Link to="/StatisitiquesJSX"> {/* Utilise Link pour créer un lien vers la route */}
+        <Button type="default" block style={{ borderColor: '#faad14' }}>
+          <ArrowUpOutlined style={{ color: '#faad14' }} /> Statistiques
+        </Button>
+      </Link>
           </Col>
         </Row>
       </div>

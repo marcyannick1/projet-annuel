@@ -73,6 +73,13 @@ const items = [
     icon: <FontAwesomeIcon icon={faCartShopping} />, // Icône de panier d'achat
   },
   {
+    key: 'user-profil', // Clé unique pour l'élément de déconnexion
+    icon: <FontAwesomeIcon icon={faCircleUser} />, // Icône de profil-user
+    label: <Link to="ProfilJSX">Voir mon Compte</Link>,
+
+    style: { position: 'absolute', bottom: 42, width: '100%' } // Position en bas du menu
+  },
+  {
     key: 'logout', // Clé unique pour l'élément de déconnexion
     icon: <LogoutOutlined />, // Icône de déconnexion
     label: 'Logout',

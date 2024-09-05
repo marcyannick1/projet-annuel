@@ -11,6 +11,7 @@ import EspaceStockageJSX from './components/espace-stockage/EspaceStockageJSX';
 import AchatEspaceJSX from './components/achat-espace/AchatEspaceJSX';
 import StatisitiquesJSX from './components/statistiques/StatisitiquesJSX';
 import FacturesJSX from './components/factures/FacturesJSX';
+import ProfilJSX from './components/profil/ProfilJSX';
 
 
 
@@ -29,6 +30,9 @@ function App() {
           <Route path="/FacturesJSX" element={<FacturesJSX />} />
           <Route path="/AchatEspaceJSX" element={<AchatEspaceJSX />} />
           <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX />} />
+          <Route path="/ProfilJSX" element={<ProfilJSX />} />
+
+
 
 
 
