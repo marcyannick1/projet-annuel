@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
     ContainerOutlined,
     DesktopOutlined, FileTextOutlined, LogoutOutlined,
@@ -11,6 +11,7 @@ import { Button, Menu } from 'antd';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCartShopping, faHome} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
+import AuthContext from "../context/authContext.jsx";
 
 const items = [
     {
@@ -76,6 +77,7 @@ const items = [
 ];
 
 const Sidebar = () => {
+    const {logout} = useContext(AuthContext)
     const [collapsed, setCollapsed] = useState(false);
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
@@ -83,8 +85,7 @@ const Sidebar = () => {
 
     const handleMenuClick = ({ key }) => {
         if (key === 'logout') {
-            // Logique de déconnexion ici
-            console.log('Logout clicked');
+            logout()
         }
     };
     return (

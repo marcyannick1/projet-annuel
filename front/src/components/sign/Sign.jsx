@@ -3,7 +3,7 @@ import styles from './Sign.module.css';
 import Background from '../background/Background.jsx';
 import {Link} from 'react-router-dom';
 import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
-import {AuthContext} from "../../context/authContext.jsx";
+import AuthContext from "../../context/authContext.jsx";
 import {Field, Form, Formik} from "formik";
 import {SignupSchema} from "../../schemas/signupSchema.js";
 import Welcome from "../../svg/register/Welcome.jsx";

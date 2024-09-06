@@ -14,6 +14,7 @@ import Sign from './components/sign/Sign.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import SideBar from "./components/SideBar.jsx";
+import ProfilJSX from "./components/profil/ProfilJSX.jsx";
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/Factures" element={<Factures/>}/>
                 <Route path="/AchatEspace" element={<AchatEspace/>}/>
                 <Route path="/Statistiques" element={<Statistiques/>}/>
+                <Route path="/Profil" element={<ProfilJSX/>}/>
             </Routes>
         </>
 
