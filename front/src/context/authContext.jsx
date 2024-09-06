@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (userData) => {
+        setError(null)
         try {
             const response = await fetch('http://localhost:3000/login', {
                 method: 'POST',
@@ -46,7 +48,7 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('user', JSON.stringify(decodedUser));
                 navigate("/");
             } else {
-                console.log("Email ou mot de passe incorrect");
+                setError("Email ou mot de passe incorrect");
             }
         } catch (error) {
             console.error('Erreur lors de la connexion :', error);
@@ -66,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, updateUser, login, logout }}>
+        <AuthContext.Provider value={{ user, updateUser, login, logout, error }}>
             {children}
         </AuthContext.Provider>
     );

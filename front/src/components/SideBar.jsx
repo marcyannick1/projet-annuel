@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCartShopping, faHome} from "@fortawesome/free-solid-svg-icons";
+import {faCartShopping, faHome, faUser} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
 import AuthContext from "../context/authContext.jsx";
 
@@ -67,6 +67,11 @@ const items = [
         key: 'sub2',
         label: <Link to="/AchatEspace">Achat Espace</Link>,
         icon: <FontAwesomeIcon icon={faCartShopping} />, // Icône de panier d'achat
+    },
+    {
+        key: 'sub4',
+        label: <Link to="/profil">Mon compte</Link>,
+        icon: <FontAwesomeIcon icon={faUser} />, // Icône de panier d'achat
     },
     {
         key: 'logout', // Clé unique pour l'élément de déconnexion

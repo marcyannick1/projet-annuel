@@ -1,6 +1,6 @@
 import React, {useContext, useRef, useState} from 'react';
 import {Card, Button, Input, DatePicker, Modal} from 'antd';
-import {UserOutlined, MailOutlined, HomeOutlined, EditOutlined} from '@ant-design/icons';
+import {UserOutlined, MailOutlined, HomeOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 
 import './ProfilJSX.css';
 import AuthContext from "../../context/authContext.jsx";
@@ -9,27 +9,43 @@ import {Field, Form, Formik} from "formik";
 import {EditProfileSchema} from "../../schemas/editProfileSchema.js";
 import dayjs from "dayjs";
 
-export default function ProfilJSX() {
-    const {user, updateUser} = useContext(AuthContext);
+export default function Profil() {
+    const { user, updateUser, logout } = useContext(AuthContext);
 
-    const formikRef = useRef(null); // Création de la référence
+    const formikRef = useRef(null);
+    const [modalState, setModalState] = useState({ type: null, visible: false });
 
-    const [open, setOpen] = useState(false);
-
-    const showModal = () => {
-        setOpen(true);
+    const showModal = (type) => {
+        setModalState({ type, visible: true });
     };
 
-    const handleOk = async () => {
-        await formikRef.current.submitForm()
-        if (formikRef.current.isSubmitting) {
-            setOpen(false);
+    const handleModalOk = async () => {
+        if (modalState.type === 'edit') {
+            await formikRef.current.submitForm();
+            if (formikRef.current.isSubmitting) {
+                setModalState({ type: null, visible: false });
+            }
+        } else if (modalState.type === 'delete') {
+            try {
+                await fetch(`http://localhost:3000/user/${user.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                logout();
+            } catch (error) {
+                console.error('Erreur lors de la suppression du compte :', error);
+            }
+            setModalState({ type: null, visible: false });
         }
     };
 
-    const handleCancel = () => {
-        formikRef.current.resetForm()
-        setOpen(false);
+    const handleModalCancel = () => {
+        if (modalState.type === 'edit') {
+            formikRef.current.resetForm();
+        }
+        setModalState({ type: null, visible: false });
     };
 
     const handleSubmit = async (userData) => {
@@ -47,7 +63,7 @@ export default function ProfilJSX() {
         }
     }
 
-    const ErrorMessage = ({children}) => {
+    const InputErrorMessage = ({children}) => {
         return (
             <div style={{color: "crimson", fontSize: 12}}>{children}</div>
         )
@@ -58,30 +74,34 @@ export default function ProfilJSX() {
             <h2 className='page-title'>Mon Profil</h2>
 
             {user &&
-                <Card title="Informations Personnelles" style={{backgroundColor: '#f0f9ff'}}>
-                    <p><UserOutlined style={{color: '#1890ff'}}/> <strong>Nom :</strong> {user.lastName}</p>
-                    <p><UserOutlined style={{color: '#1890ff'}}/> <strong>Prénom :</strong> {user.firstName}</p>
-                    <p><MailOutlined style={{color: '#40a9ff'}}/> <strong>Email :</strong> {user.email}</p>
-                    <p><HomeOutlined style={{color: '#13c2c2'}}/> <strong>Adresse :</strong> {user.address}</p>
-                    <p><UserOutlined style={{color: '#faad14'}}/> <strong>Date de naissance
-                        :</strong> {new Date(user.birthday).toLocaleDateString()}</p>
-                    <p><UserOutlined style={{color: '#faad14'}}/> <strong>Date de création du compte
-                        :</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
-                    <Button type="primary" icon={<EditOutlined/>} style={{marginTop: '16px'}} onClick={showModal}>
-                        Modifier mes informations
-                    </Button>
-                </Card>
+                <>
+                    <Card title="Informations Personnelles" style={{backgroundColor: '#f0f9ff'}}>
+                        <p><UserOutlined style={{color: '#1890ff'}}/> <strong>Nom :</strong> {user.lastName}</p>
+                        <p><UserOutlined style={{color: '#1890ff'}}/> <strong>Prénom :</strong> {user.firstName}</p>
+                        <p><MailOutlined style={{color: '#40a9ff'}}/> <strong>Email :</strong> {user.email}</p>
+                        <p><HomeOutlined style={{color: '#13c2c2'}}/> <strong>Adresse :</strong> {user.address}</p>
+                        <p><UserOutlined style={{color: '#faad14'}}/> <strong>Date de naissance
+                            :</strong> {new Date(user.birthday).toLocaleDateString()}</p>
+                        <p><UserOutlined style={{color: '#faad14'}}/> <strong>Date de création du compte
+                            :</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+                        <Button type="primary" icon={<EditOutlined/>} style={{marginTop: '16px'}} onClick={()=>showModal("edit")}>
+                            Modifier mes informations
+                        </Button>
+                        <Button type="primary" danger icon={<DeleteOutlined />} style={{marginTop: '16px'}} onClick={()=>showModal("delete")}>
+                            Supprimer le compte
+                        </Button>
+                    </Card>
+                </>
             }
-
 
             <Modal
                 title="Modifier mes informations"
-                open={open}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                centered
+                open={modalState.visible && modalState.type === 'edit'}
+                onOk={handleModalOk}
+                onCancel={handleModalCancel}
                 okText={"Modifier"}
                 cancelText={"Annuler"}
+                centered
             >
                 <Formik
                     initialValues={{
@@ -121,9 +141,9 @@ export default function ProfilJSX() {
                                     placeholder="Sélectionner une date"
                                     allowClear={false}
                                 />
-                                <ErrorMessage>
+                                <InputErrorMessage>
                                     {errors.birthday && touched.birthday ? errors.birthday : null}
-                                </ErrorMessage>
+                                </InputErrorMessage>
                             </div>
 
                             <div>
@@ -136,13 +156,26 @@ export default function ProfilJSX() {
                                 <label htmlFor="email">Adresse mail</label>
                                 <Field name="email" as={Input} id="email"
                                        status={errors.email && touched.email ? "error" : null}/>
-                                <ErrorMessage>
+                                <InputErrorMessage>
                                     {errors.email && touched.email ? errors.email : null}
-                                </ErrorMessage>
+                                </InputErrorMessage>
                             </div>
                         </Form>
                     )}
                 </Formik>
+            </Modal>
+
+            <Modal
+                title="Supprimer le compte"
+                open={modalState.visible && modalState.type === 'delete'}
+                onOk={handleModalOk}
+                onCancel={handleModalCancel}
+                okText={"Supprimer"}
+                cancelText={"Annuler"}
+                okButtonProps={{danger: true}}
+                centered
+            >
+                Voulez vous vraiment supprimer votre compte?
             </Modal>
         </div>
     );
