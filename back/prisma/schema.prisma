@@ -32,6 +32,7 @@ model File {
   name      String
   url       String   @db.Text
   size      Int
+  format    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   createdAt DateTime @default(now())

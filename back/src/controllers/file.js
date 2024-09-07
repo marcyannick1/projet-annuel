@@ -20,6 +20,7 @@ const uploadFiles = async (req, res) => {
         for (const file of files) {
             console.log(file);
             const fileName = `${userId}/${Date.now()}-${file.originalname}`;
+            const fileExtension = file.originalname.split(".").pop();
 
             const fileBucket = bucket.file(fileName);
             await fileBucket.save(file.buffer);
@@ -31,6 +32,7 @@ const uploadFiles = async (req, res) => {
                     name: file.originalname,
                     url: publicUrl.toString(),
                     size: file.size,
+                    format: fileExtension,
                     userId: parseInt(userId)
                 }
             })
