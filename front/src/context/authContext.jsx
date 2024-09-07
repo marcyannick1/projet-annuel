@@ -1,77 +1,77 @@
-import {createContext, useState, useEffect, useContext} from 'react';
-import axios from "axios";
-import {useNavigate} from "react-router-dom";
-// import {jwtDecode} from "jwt-decode";
+import { createContext, useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+export const AuthProvider = ({ children }) => {
+    const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
-    const [error, setError] = useState()
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            const decodedToken = jwtDecode(storedToken);
 
-    // useEffect(() => {
-    //     const token = localStorage.getItem("token");
-    //     if (token) {
-    //         try {
-    //             const decodedToken = jwtDecode(token);
-    //             setUser(decodedToken);
-    //             setIsAuthenticated(true)
-    //         } catch (e) {
-    //             setUser(null);
-    //             setIsAuthenticated(false)
-    //         }
-    //     }
-    // }, []);
+            if (decodedToken.exp * 1000 < Date.now()) {
+                localStorage.removeItem('token');
+                setUser(null);
+            } else {
+                const storedUser = localStorage.getItem('user');
+                if (storedUser) {
+                    setUser(JSON.parse(storedUser));
+                } else {
+                    setUser(decodedToken);
+                }
+            }
+        }
+    }, []);
 
-    const register = (formData) => {
-        axios({
-            method: 'post',
-            url: "http://localhost:3000/register",
-            data: formData
-        }).then((response) => {
-            if (response.status === 201) {
-                navigate("/login")
-            }
-        }).catch((error) => {
-            if (error.response.data.code === "P2002") {
-                setError("Email deja utilisé")
-            }
-            console.log(error)
-        })
-    }
+    const login = async (userData) => {
+        setError(null)
+        try {
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
 
-    const login = (formData) => {
-        axios({
-            method: 'post',
-            url: "http://localhost:3000/login",
-            data: formData
-        }).then((response) => {
-            console.log(response)
-            if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
-                navigate("/")
-                setError(null)
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+
+                const decodedUser = jwtDecode(data.token);
+                setUser(decodedUser);
+                localStorage.setItem('user', JSON.stringify(decodedUser));
+                navigate("/");
+            } else {
+                setError("Email ou mot de passe incorrect");
             }
-        }).catch((e) => {
-            if (e.response.status === 401) {
-                setError("Email ou mot de passe incorrect")
-            }
-        })
-    }
+        } catch (error) {
+            console.error('Erreur lors de la connexion :', error);
+        }
+    };
 
     const logout = () => {
         localStorage.removeItem('token');
-        setIsAuthenticated(false);
+        localStorage.removeItem('user');
         setUser(null);
-        navigate("/connection")
+        navigate("/login");
+    };
+
+    const updateUser = (newUser) => {
+        setUser(newUser);
+        localStorage.setItem('user', JSON.stringify(newUser));
     };
 
     return (
-        <AuthContext.Provider value={{login, register, logout, isAuthenticated, user, error, setError}}>
+        <AuthContext.Provider value={{ user, updateUser, login, logout, error }}>
             {children}
         </AuthContext.Provider>
     );
 };
+
+export default AuthContext;
