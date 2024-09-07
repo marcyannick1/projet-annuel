@@ -68,7 +68,36 @@ const deleteFiles = async (req, res) => {
     }
 }
 
+const getAllfiles = async (req, res) => {
+    try {
+        const files = await prisma.file.findMany()
+        files.length ? res.status(200).json(files) : res.status(404).json({message: 'Aucun fichiers trouvés'})
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: 'Erreur lors de la recuperation'});
+    }
+}
+
+const getFilesByUser = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const files = await prisma.file.findMany({
+            where: {
+                userId: parseInt(id)
+            }
+        })
+        files.length ? res.status(200).json(files) : res.status(404).json({message: 'Aucun fichiers trouvés'})
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: 'Erreur lors de la recuperation'});
+    }
+}
+
 module.exports = {
     uploadFiles,
-    deleteFiles
+    deleteFiles,
+    getAllfiles,
+    getFilesByUser
 };
