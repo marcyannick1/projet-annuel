@@ -31,6 +31,7 @@ model File {
   id        Int      @id @default(autoincrement())
   name      String
   url       String   @db.Text
+  size      BigInt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   createdAt DateTime @default(now())
