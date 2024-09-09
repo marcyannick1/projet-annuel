@@ -46,7 +46,7 @@ const AchatEspace = () => {
 
     return (
         <div className={styles.achatEspace}
-             style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px'}}>
+             style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px' , marginLeft:'300px'}}>
             <Card title="Acheter de l'Espace Supplémentaire" style={{
                 width: 400,
                 textAlign: 'center',

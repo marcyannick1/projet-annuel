@@ -169,7 +169,7 @@
     display: flex;
     align-items: center;
     font-size: 16px;
-    cursor: pointer; /* Pour indiquer que c'est cliquable */
+    cursor: pointer;
 }
 
 .user-name .fa-circle-user {
@@ -177,11 +177,11 @@
 }
 
 .chevron-icon {
-    margin-left: 8px; /* Espace entre l'email et le chevron */
+    margin-left: 8px; 
 }
 
 .user-role {
-    margin-top: 8px; /* Espace entre l'email et le rôle */
+    margin-top: 8px; 
     font-size: 12px;
     color: #666;
 }
