@@ -16,6 +16,8 @@ const uploadFiles = async (req, res) => {
     const files = req.files;
     const {userId} = req.body
 
+    let filesData = []
+
     try {
         for (const file of files) {
             console.log(file);
@@ -27,7 +29,7 @@ const uploadFiles = async (req, res) => {
 
             const publicUrl = await fileBucket.getSignedUrl({action: 'read', expires: '03-17-2025'});
 
-            await prisma.file.create({
+            const fileData = await prisma.file.create({
                 data: {
                     name: file.originalname,
                     url: publicUrl.toString(),
@@ -36,10 +38,13 @@ const uploadFiles = async (req, res) => {
                     userId: parseInt(userId)
                 }
             })
+
+            filesData.push(fileData);
         }
 
         res.status(200).json({
-            message: 'Fichier(s) téléchargé(s) avec succès'
+            message: 'Fichier(s) téléchargé(s) avec succès',
+            files: filesData
         });
     } catch (error) {
         console.error(error);
