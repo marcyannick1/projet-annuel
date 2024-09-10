@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom'; // Importer Link de react-router-dom
 import { Card, Col, Row, Statistic, Divider, Button } from 'antd';
 import { UserOutlined, FileOutlined, MessageOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import './AccueilJSX.css';
+import { AuthContext } from '../../context/authContext';
 
 export default function AccueilJSX() {
+  const {user} = useContext(AuthContext);
+  console.log(user);
   return (
     <div className='home-page contain'>
       <h2 className='page-title'>Bienvenue sur le Dashboard</h2>

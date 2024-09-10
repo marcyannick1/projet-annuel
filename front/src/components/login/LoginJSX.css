@@ -1,4 +1,4 @@
-.content {
+.contentt {
     display: flex;
     min-height: 500px;
     max-width: 800px;
@@ -13,6 +13,9 @@
 }
 
 .form-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     width: 50%;
     padding: 40px;
     align-self: center;
@@ -62,3 +65,14 @@
 .svg-container{
     text-align: center;
 }
+
+.logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .company-logo {
+    width: 150px; /* Ajuste la taille selon tes besoins */
+    height: auto; /* Maintient les proportions */
+    object-fit: contain; /* S'assure que l'image reste contenue dans la boîte */
+  }

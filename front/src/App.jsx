@@ -26,7 +26,6 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <Router>
       <DashboardJSX>
         <Routes>
           <Route path="/" element={<AccueilJSX />} />
@@ -44,7 +43,6 @@ function App() {
 
         </Routes>
       </DashboardJSX>
-    </Router>
   )
 
 }

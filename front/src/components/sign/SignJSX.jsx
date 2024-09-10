@@ -42,7 +42,7 @@ const SignJSX = () => {
             <div className="back">
                 <BackgroundJSX/>
             </div>
-            <div className="content">
+            <div className="conte">
                 <div className="form-container">
                     <h2>S'inscrire</h2>
                     <Formik
