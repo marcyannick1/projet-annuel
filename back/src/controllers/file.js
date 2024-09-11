@@ -25,7 +25,6 @@ const uploadFiles = async (req, res) => {
             const fileData = await prisma.file.create({
                 data: {
                     name: file.originalname,
-                    // url: publicUrl.toString(),
                     size: file.size,
                     format: fileExtension,
                     userId: parseInt(userId)
@@ -53,7 +52,10 @@ const uploadFiles = async (req, res) => {
 
         res.status(200).json({
             message: 'Fichier(s) téléchargé(s) avec succès',
-            files: filesData
+            files: JSON.parse(JSON.stringify(
+                filesData,
+                (key, value) => (typeof value === 'bigint' ? parseInt(value) : value) // return everything else unchanged
+            ))
         });
     } catch (error) {
         console.error(error);
@@ -86,7 +88,13 @@ const deleteFiles = async (req, res) => {
 const getAllfiles = async (req, res) => {
     try {
         const files = await prisma.file.findMany()
-        files.length ? res.status(200).json(files) : res.status(404).json({message: 'Aucun fichiers trouvés'})
+        files.length ?
+            res.status(200).json(
+                JSON.parse(JSON.stringify(
+                    files,
+                    (key, value) => (typeof value === 'bigint' ? parseInt(value) : value) // return everything else unchanged
+                ))
+            ) : res.status(404).json({message: 'Aucun fichiers trouvés'})
 
     } catch (error) {
         console.error(error);
@@ -102,7 +110,13 @@ const getFilesByUser = async (req, res) => {
                 userId: parseInt(id)
             }
         })
-        files.length ? res.status(200).json(files) : res.status(404).json({message: 'Aucun fichiers trouvés'})
+        files.length ?
+            res.status(200).json(
+                JSON.parse(JSON.stringify(
+                    files,
+                    (key, value) => (typeof value === 'bigint' ? parseInt(value) : value) // return everything else unchanged
+                ))
+            ) : res.status(404).json({message: 'Aucun fichiers trouvés'})
 
     } catch (error) {
         console.error(error);
