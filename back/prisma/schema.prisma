@@ -30,7 +30,7 @@ model User {
 model File {
   id        Int      @id @default(autoincrement())
   name      String
-  url       String   @db.Text
+  url       String?  @db.Text
   size      Int
   format    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

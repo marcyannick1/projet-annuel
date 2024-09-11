@@ -20,26 +20,35 @@ const uploadFiles = async (req, res) => {
 
     try {
         for (const file of files) {
-            console.log(file);
-            const fileName = `${userId}/${Date.now()}-${file.originalname}`;
             const fileExtension = file.originalname.split(".").pop();
-
-            const fileBucket = bucket.file(fileName);
-            await fileBucket.save(file.buffer);
-
-            const publicUrl = await fileBucket.getSignedUrl({action: 'read', expires: '03-17-2025'});
 
             const fileData = await prisma.file.create({
                 data: {
                     name: file.originalname,
-                    url: publicUrl.toString(),
+                    // url: publicUrl.toString(),
                     size: file.size,
                     format: fileExtension,
                     userId: parseInt(userId)
                 }
             })
 
-            filesData.push(fileData);
+            const fileName = `${userId}/${fileData.id}-${file.originalname}`;
+
+            const fileBucket = bucket.file(fileName);
+            await fileBucket.save(file.buffer);
+
+            const publicUrl = await fileBucket.getSignedUrl({action: 'read', expires: '03-17-2025'});
+
+            const fileDataUpdate = await prisma.file.update({
+                where: {
+                    id: fileData.id
+                },
+                data: {
+                    url: publicUrl.toString()
+                }
+            })
+
+            filesData.push(fileDataUpdate);
         }
 
         res.status(200).json({
@@ -56,7 +65,7 @@ const deleteFiles = async (req, res) => {
     const {filesData, userId} = req.body;
     try {
         for (const fileData of filesData) {
-            const file = bucket.file(`${userId}/${fileData.name}`);
+            const file = bucket.file(`${userId}/${fileData.id}-${fileData.name}`);
             await file.delete();
 
             await prisma.file.delete({
@@ -64,11 +73,10 @@ const deleteFiles = async (req, res) => {
                     id: parseInt(fileData.id)
                 }
             })
-
-            res.status(200).json({
-                message: 'Fichier(s) téléchargé(s) avec succès'
-            });
         }
+        res.status(200).json({
+            message: 'Fichier(s) supprimé(s) avec succès'
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({error: 'Erreur lors de la suppression'});
