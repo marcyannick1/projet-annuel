@@ -20,31 +20,42 @@ const uploadFiles = async (req, res) => {
 
     try {
         for (const file of files) {
-            console.log(file);
-            const fileName = `${userId}/${Date.now()}-${file.originalname}`;
             const fileExtension = file.originalname.split(".").pop();
-
-            const fileBucket = bucket.file(fileName);
-            await fileBucket.save(file.buffer);
-
-            const publicUrl = await fileBucket.getSignedUrl({action: 'read', expires: '03-17-2025'});
 
             const fileData = await prisma.file.create({
                 data: {
                     name: file.originalname,
-                    url: publicUrl.toString(),
                     size: file.size,
                     format: fileExtension,
                     userId: parseInt(userId)
                 }
             })
 
-            filesData.push(fileData);
+            const fileName = `${userId}/${fileData.id}-${file.originalname}`;
+
+            const fileBucket = bucket.file(fileName);
+            await fileBucket.save(file.buffer);
+
+            const publicUrl = await fileBucket.getSignedUrl({action: 'read', expires: '03-17-2025'});
+
+            const fileDataUpdate = await prisma.file.update({
+                where: {
+                    id: fileData.id
+                },
+                data: {
+                    url: publicUrl.toString()
+                }
+            })
+
+            filesData.push(fileDataUpdate);
         }
 
         res.status(200).json({
             message: 'Fichier(s) téléchargé(s) avec succès',
-            files: filesData
+            files: JSON.parse(JSON.stringify(
+                filesData,
+                (key, value) => (typeof value === 'bigint' ? parseInt(value) : value) // return everything else unchanged
+            ))
         });
     } catch (error) {
         console.error(error);
@@ -56,7 +67,7 @@ const deleteFiles = async (req, res) => {
     const {filesData, userId} = req.body;
     try {
         for (const fileData of filesData) {
-            const file = bucket.file(`${userId}/${fileData.name}`);
+            const file = bucket.file(`${userId}/${fileData.id}-${fileData.name}`);
             await file.delete();
 
             await prisma.file.delete({
@@ -64,11 +75,10 @@ const deleteFiles = async (req, res) => {
                     id: parseInt(fileData.id)
                 }
             })
-
-            res.status(200).json({
-                message: 'Fichier(s) téléchargé(s) avec succès'
-            });
         }
+        res.status(200).json({
+            message: 'Fichier(s) supprimé(s) avec succès'
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({error: 'Erreur lors de la suppression'});
@@ -78,7 +88,13 @@ const deleteFiles = async (req, res) => {
 const getAllfiles = async (req, res) => {
     try {
         const files = await prisma.file.findMany()
-        files.length ? res.status(200).json(files) : res.status(404).json({message: 'Aucun fichiers trouvés'})
+        files.length ?
+            res.status(200).json(
+                JSON.parse(JSON.stringify(
+                    files,
+                    (key, value) => (typeof value === 'bigint' ? parseInt(value) : value) // return everything else unchanged
+                ))
+            ) : res.status(404).json({message: 'Aucun fichiers trouvés'})
 
     } catch (error) {
         console.error(error);
@@ -94,7 +110,13 @@ const getFilesByUser = async (req, res) => {
                 userId: parseInt(id)
             }
         })
-        files.length ? res.status(200).json(files) : res.status(404).json({message: 'Aucun fichiers trouvés'})
+        files.length ?
+            res.status(200).json(
+                JSON.parse(JSON.stringify(
+                    files,
+                    (key, value) => (typeof value === 'bigint' ? parseInt(value) : value) // return everything else unchanged
+                ))
+            ) : res.status(404).json({message: 'Aucun fichiers trouvés'})
 
     } catch (error) {
         console.error(error);

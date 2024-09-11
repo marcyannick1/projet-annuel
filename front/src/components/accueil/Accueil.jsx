@@ -6,11 +6,10 @@ export default function Accueil() {
     return (
         <div className={`${styles.homePage} contain`}>
             <h2 className={styles.pageTitle}>Bienvenue sur le Dashboard</h2>
-            <p className={styles.welcomeMessage}>Voici un aperçu rapide de vos activités récentes et des statistiques
-                importantes.</p>
+            <p className={styles.welcomeMessage}>Voici un aperçu rapide de vos activités récentes et des statistiques importantes.</p>
 
-            <Row gutter={16}>
-                <Col span={6}>
+            <Row gutter={[16, 16]}>
+                <Col xs={24} sm={12}>
                     <Card style={{backgroundColor: '#e6f7ff', borderRadius: '8px'}}>
                         <Statistic
                             title="Utilisateurs Actifs"
@@ -20,7 +19,7 @@ export default function Accueil() {
                         />
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col xs={24} sm={12}>
                     <Card style={{backgroundColor: '#f0f9ff', borderRadius: '8px'}}>
                         <Statistic
                             title="Fichiers Uploadés"
@@ -30,7 +29,7 @@ export default function Accueil() {
                         />
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col xs={24} sm={12}>
                     <Card style={{backgroundColor: '#e6fffb', borderRadius: '8px'}}>
                         <Statistic
                             title="Messages Non Lu"
@@ -40,7 +39,7 @@ export default function Accueil() {
                         />
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col xs={24} sm={12}>
                     <Card style={{backgroundColor: '#fffbe6', borderRadius: '8px'}}>
                         <Statistic
                             title="Taux de Croissance"
@@ -54,27 +53,27 @@ export default function Accueil() {
                 </Col>
             </Row>
 
-            <Divider/>
+            <Divider />
 
             <div>
                 <h3>Accès Rapide</h3>
-                <Row gutter={16}>
-                    <Col span={6}>
+                <Row gutter={[16, 16]}>
+                    <Col xs={24} sm={12}>
                         <Button type="primary" block style={{backgroundColor: '#1890ff', borderColor: '#1890ff'}}>
                             <FileOutlined style={{color: '#fff'}}/> Voir les fichiers
                         </Button>
                     </Col>
-                    <Col span={6}>
+                    <Col xs={24} sm={12}>
                         <Button type="default" block style={{borderColor: '#40a9ff'}}>
                             <MessageOutlined style={{color: '#40a9ff'}}/> Messages
                         </Button>
                     </Col>
-                    <Col span={6}>
+                    <Col xs={24} sm={12}>
                         <Button type="default" block style={{borderColor: '#13c2c2'}}>
                             <UserOutlined style={{color: '#13c2c2'}}/> Utilisateurs
                         </Button>
                     </Col>
-                    <Col span={6}>
+                    <Col xs={24} sm={12}>
                         <Button type="default" block style={{borderColor: '#faad14'}}>
                             <ArrowUpOutlined style={{color: '#faad14'}}/> Statistiques
                         </Button>
@@ -82,7 +81,7 @@ export default function Accueil() {
                 </Row>
             </div>
 
-            <Divider/>
+            <Divider />
 
             <div className={styles.notifications}>
                 <h3>Notifications</h3>

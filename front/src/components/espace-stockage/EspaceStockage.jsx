@@ -5,14 +5,14 @@ import styles from './EspaceStockage.module.css';
 import AuthContext from "../../context/authContext.jsx";
 import {filesize} from "filesize";
 
-const {Option} = Select;
+const { Option } = Select;
 
 export default function EspaceStockage() {
     const {user} = useContext(AuthContext);
     const [files, setFiles] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFormat, setSelectedFormat] = useState(null);
-
+  
     // // Fonction pour uploader un fichier
     const handleUpload = async ({file}) => {
         const formData = new FormData();
@@ -26,6 +26,7 @@ export default function EspaceStockage() {
 
         const data = await response.json();
         setFiles([...files, ...data.files])
+
     };
 
     // // Fonction pour supprimer un fichier
@@ -62,12 +63,10 @@ export default function EspaceStockage() {
     const processFiles = () => {
         let processedFiles = [...files];
 
-        // Filtrage par format
         if (selectedFormat) {
             processedFiles = processedFiles.filter(file => file.format === selectedFormat);
         }
 
-        // Recherche par nom de fichier
         if (searchTerm) {
             processedFiles = processedFiles.filter(file => file.name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
@@ -75,7 +74,6 @@ export default function EspaceStockage() {
         return processedFiles;
     };
 
-    // Colonnes de la table avec tri par date et taille
     const columns = [
         {
             title: 'Nom du fichier',
@@ -119,7 +117,7 @@ export default function EspaceStockage() {
                     okText="Oui"
                     cancelText="Non"
                 >
-                    <Button type="primary" danger icon={<DeleteOutlined/>}>
+                    <Button type="primary" danger icon={<DeleteOutlined />}>
                         Supprimer
                     </Button>
                 </Popconfirm>
@@ -188,7 +186,19 @@ export default function EspaceStockage() {
                 <div style={{marginTop: 20, textAlign: 'center'}}>
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Aucun fichier disponible"/>
                 </div>
-            )}
-        </div>
+
+                {files.length > 0 ? (
+                    <Table
+                        columns={columns}
+                        dataSource={processFiles()}
+                        style={{ marginTop: 20 }}
+                    />
+                ) : (
+                    <div style={{ marginTop: 20, textAlign: 'center' }}>
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Aucun fichier disponible" />
+                    </div>
+                )}
+            </Col>
+        </Row>
     );
 }

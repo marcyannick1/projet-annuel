@@ -19,6 +19,7 @@ app.use(
 app.use("/", require("./src/routes/auth"))
 app.use("/user", require("./src/routes/user"))
 app.use("/file", require("./src/routes/file"))
+app.use("/subscription", require("./src/routes/subscription"))
 
 app.listen(process.env.SERVER_PORT, () => {
     console.log(`Serveur en écoute sur http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}`);
