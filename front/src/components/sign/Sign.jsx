@@ -1,14 +1,15 @@
-import {useContext} from 'react';
 import styles from './Sign.module.css';
 import Background from '../background/Background.jsx';
 import {Link} from 'react-router-dom';
 import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
-import {AuthContext} from "../../context/authContext.jsx";
 import {Field, Form, Formik} from "formik";
 import {SignupSchema} from "../../schemas/signupSchema.js";
 import Welcome from "../../svg/register/Welcome.jsx";
 import SignUp from "../../svg/register/SignUp.jsx";
 import Gift from "../../svg/register/Gift.jsx";
+import { useNavigate } from 'react-router-dom';
+import {useState} from "react";
+
 
 const svgImages = [
     {
@@ -29,7 +30,30 @@ const svgImages = [
 ];
 
 const Sign = () => {
-    const {register, error} = useContext(AuthContext)
+    const [error, setError] = useState(null)
+    const navigate = useNavigate();
+
+    const handleSubmit = async (userData)=>{
+        setError(null)
+        try {
+            const response = await fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            if (response.ok) {
+                navigate("/login");
+            } else {
+                const res = await response.json()
+                res.code === "P2002" ? setError("Email déja utilisé") : setError("Une erreur est survenue");
+            }
+        } catch (error) {
+            console.error('Erreur lors de la connexion :', error);
+        }
+    }
 
     const ErrorMessage = ({children}) => {
         return (
@@ -54,10 +78,7 @@ const Sign = () => {
                             confirmPassword: '',
                         }}
                         validationSchema={SignupSchema}
-                        onSubmit={(values) => {
-                            console.log('Form data:', values);
-                            register(values)
-                        }}
+                        onSubmit={handleSubmit}
                     >
                         {({setFieldValue, errors, touched}) => (
                             <Form className={styles.login_form}>

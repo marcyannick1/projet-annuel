@@ -1,6 +1,5 @@
-import React from 'react';
-import { Card, Col, Row, Statistic, Divider, Button } from 'antd';
-import { UserOutlined, FileOutlined, MessageOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import {Card, Col, Row, Statistic, Divider, Button} from 'antd';
+import {UserOutlined, FileOutlined, MessageOutlined, ArrowUpOutlined} from '@ant-design/icons';
 import styles from './Accueil.module.css';
 
 export default function Accueil() {

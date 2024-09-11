@@ -1,44 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Button, Upload, message, Popconfirm, Empty, Input, Select, Row, Col } from 'antd';
-import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import React, {useState, useEffect, useContext} from 'react';
+import {Table, Button, Upload, Popconfirm, Empty, Input, Select} from 'antd';
+import {UploadOutlined, DeleteOutlined} from '@ant-design/icons';
 import styles from './EspaceStockage.module.css';
+import AuthContext from "../../context/authContext.jsx";
+import {filesize} from "filesize";
 
 const { Option } = Select;
 
 export default function EspaceStockage() {
+    const {user} = useContext(AuthContext);
     const [files, setFiles] = useState([]);
-    const [filteredFiles, setFilteredFiles] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFormat, setSelectedFormat] = useState(null);
+  
+    // // Fonction pour uploader un fichier
+    const handleUpload = async ({file}) => {
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('userId', user.id);
 
-    // Fonction pour charger les fichiers existants
-    const fetchFiles = () => {
-        const mockFiles = [
-            { key: '1', name: 'Document1.pdf', size: '50KB', format: 'pdf', date: new Date('2024-01-10') },
-            { key: '2', name: 'Image1.jpg', size: '200KB', format: 'jpg', date: new Date('2024-01-15') },
-            { key: '3', name: 'Presentation.ppt', size: '120KB', format: 'ppt', date: new Date('2024-01-20') },
-        ];
-        setFiles(mockFiles);
+        const response = await fetch("http://localhost:3000/file", {
+            method: 'POST',
+            body: formData
+        })
+
+        const data = await response.json();
+        setFiles([...files, ...data.files])
+
     };
 
-    // Fonction pour uploader un fichier
-    const handleUpload = (file) => {
-        const newFile = {
-            key: `${files.length + 1}`,
-            name: file.name,
-            size: `${(file.size / 1024).toFixed(2)}KB`,
-            format: file.name.split('.').pop(),
-            date: new Date(),
-        };
-        setFiles([...files, newFile]);
-        message.success(`${file.name} a été téléchargé avec succès.`);
-    };
-
-    // Fonction pour supprimer un fichier
-    const handleDelete = (key) => {
-        const updatedFiles = files.filter((file) => file.key !== key);
+    // // Fonction pour supprimer un fichier
+    const handleDelete = async (record) => {
+        const filesDelete = await fetch('http://localhost:3000/file', {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json', // Spécifier que le corps est en JSON
+            },
+            body: JSON.stringify({
+                userId: user.id,
+                filesData: [{
+                    id: record.id,
+                    name: record.name,
+                }]
+            })
+        })
+        console.log(await filesDelete.json());
+        const updatedFiles = files.filter((file) => file.id !== record.id);
         setFiles(updatedFiles);
-        message.success('Fichier supprimé avec succès.');
     };
 
     // Fonction pour gérer la recherche
@@ -72,19 +80,32 @@ export default function EspaceStockage() {
             dataIndex: 'name',
             key: 'name',
             sorter: (a, b) => a.name.localeCompare(b.name),
+            render: (text, record) => (
+                <a href={record.url} target="_blank">
+                    {text}
+                </a>
+            )
         },
         {
             title: 'Taille',
             dataIndex: 'size',
             key: 'size',
             sorter: (a, b) => parseFloat(a.size) - parseFloat(b.size),
+            render: (text) => (
+                <p>{filesize(text, {symbols : {B: "octet(s)", kB: "Ko", MB: "Mo", GB: "Go"}})}</p>
+            )
         },
         {
-            title: "Date d'upload",
-            dataIndex: 'date',
-            key: 'date',
-            render: (date) => date.toLocaleDateString(),
-            sorter: (a, b) => a.date - b.date,
+            title: 'Format',
+            dataIndex: 'format',
+            key: 'format',
+        },
+        {
+            title: 'Date d\'upload',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (date) => new Date(date).toLocaleDateString(),
+            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
             title: 'Action',
@@ -92,7 +113,7 @@ export default function EspaceStockage() {
             render: (_, record) => (
                 <Popconfirm
                     title="Êtes-vous sûr de vouloir supprimer ce fichier?"
-                    onConfirm={() => handleDelete(record.key)}
+                    onConfirm={() => handleDelete(record)}
                     okText="Oui"
                     cancelText="Non"
                 >
@@ -104,41 +125,66 @@ export default function EspaceStockage() {
         },
     ];
 
+    const filesFormats = [...new Set(files.map(file => file.format))];
+
     useEffect(() => {
-        fetchFiles();
-    }, []);
+        const fetchFiles = async () => {
+            const files = await fetch(`http://localhost:3000/file/${user.id}`)
+            const data = await files.json();
+            console.log(data)
+
+            const filteredFiles = data.map((file) => ({
+                id: file.id,
+                name: file.name,
+                size: file.size,
+                createdAt: file.createdAt,
+                format: file.format,
+                url: file.url
+            }));
+
+            setFiles(filteredFiles)
+        };
+
+        fetchFiles()
+    }, [user]);
 
     return (
-        <Row justify="center" align="middle" style={{ height: '100vh', marginLeft: '50px' }}>
-            <Col span={18} style={{ textAlign: 'center' }}>
-                <h2>Espace de Stockage</h2>
-                <div>
-                    <Input
-                        placeholder="Rechercher par nom de fichier"
-                        onChange={handleSearch}
-                        style={{ marginBottom: 16, width: 200 }}
-                    />
-                    <Select
-                        placeholder="Filtrer par format"
-                        onChange={handleFormatChange}
-                        style={{ marginBottom: 16, width: 200 }}
-                    >
-                        <Option value={null}>Tous les formats</Option>
-                        <Option value="pdf">PDF</Option>
-                        <Option value="jpg">JPG</Option>
-                        <Option value="ppt">PPT</Option>
-                    </Select>
-                    <Upload
-                        customRequest={({ file, onSuccess }) => {
-                            setTimeout(() => {
-                                handleUpload(file);
-                                onSuccess('ok');
-                            }, 1000);
-                        }}
-                        showUploadList={false}
-                    >
-                        <Button icon={<UploadOutlined />}>Uploader un fichier</Button>
-                    </Upload>
+        <div className={`${styles.espace_stockage} contain`}>
+            <h2>Espace de Stockage</h2>
+            <div style={{display: "flex", gap: 10}}>
+                <Input
+                    placeholder="Rechercher par nom de fichier"
+                    onChange={handleSearch}
+                    style={{marginBottom: 16, width: 200}}
+                />
+                <Select
+                    placeholder="Filtrer par format"
+                    onChange={handleFormatChange}
+                    style={{marginBottom: 16, width: 200}}
+                >
+                    <Option value={null}>Tous les formats</Option>
+                    {filesFormats.map((format, idx) => (
+                        <Option key={idx} value={format}>{format}</Option>
+                    ))}
+                </Select>
+                <Upload
+                    customRequest={handleUpload}
+                    showUploadList={false}
+                    multiple
+                >
+                    <Button icon={<UploadOutlined/>}>Uploader un fichier</Button>
+                </Upload>
+            </div>
+
+            {files.length > 0 ? (
+                <Table
+                    columns={columns}
+                    dataSource={processFiles()}
+                    style={{marginTop: 20}}
+                />
+            ) : (
+                <div style={{marginTop: 20, textAlign: 'center'}}>
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Aucun fichier disponible"/>
                 </div>
 
                 {files.length > 0 ? (

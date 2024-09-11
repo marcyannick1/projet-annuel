@@ -1,0 +1,42 @@
+.contain {
+  margin-left: 136px;
+}
+
+.profile-page {
+  padding: 24px;
+  background-color: #f0f2f5;
+}
+
+.page-title {
+  margin-bottom: 16px;
+  font-size: 24px;
+  color: #333;
+}
+
+.ant-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.ant-card .ant-card-title {
+  font-size: 18px;
+  color: #333;
+}
+
+.notifications {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+h3 {
+  font-size: 18px;
+  color: #333;
+}
+
+p {
+  font-size: 14px;
+  color: #555;
+}
