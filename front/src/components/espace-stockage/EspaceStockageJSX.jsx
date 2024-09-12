@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Upload, message, Popconfirm, Empty, Input, Select, Typography, Space } from 'antd';
-import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { UploadOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined } from '@ant-design/icons';
 import './EspaceStockageJSX.css';
 
 const { Option } = Select;
@@ -57,6 +57,18 @@ export default function EspaceStockageJSX() {
     return processedFiles;
   };
 
+  const handleView = (file) => {
+    // Assurez-vous que l'URL est correcte pour accéder aux fichiers
+    const url = `/files/${file.name}`;
+    window.open(url, '_blank');
+  };
+
+  const handleDownload = (file) => {
+    // Assurez-vous que l'URL est correcte pour le téléchargement
+    const url = `/files/${file.name}`;
+    window.location.href = url;
+  };
+
   const columns = [
     {
       title: 'Nom du fichier',
@@ -81,16 +93,32 @@ export default function EspaceStockageJSX() {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Popconfirm
-          title="Êtes-vous sûr de vouloir supprimer ce fichier?"
-          onConfirm={() => handleDelete(record.key)}
-          okText="Oui"
-          cancelText="Non"
-        >
-          <Button type="primary" danger icon={<DeleteOutlined />}>
-            Supprimer
+        <Space>
+          <Button
+            type="default"
+            icon={<EyeOutlined />}
+            onClick={() => handleView(record)}
+          >
+            Voir
           </Button>
-        </Popconfirm>
+          <Button
+            type="default"
+            icon={<DownloadOutlined />}
+            onClick={() => handleDownload(record)}
+          >
+            Télécharger
+          </Button>
+          <Popconfirm
+            title="Êtes-vous sûr de vouloir supprimer ce fichier?"
+            onConfirm={() => handleDelete(record.key)}
+            okText="Oui"
+            cancelText="Non"
+          >
+            <Button type="primary" danger icon={<DeleteOutlined />}>
+              Supprimer
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];

@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'; // Importer Link de react-router-dom
 import { Card, Col, Row, Statistic, Divider, Button } from 'antd';
 import { UserOutlined, FileOutlined, MessageOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import './AccueilJSX.css';
-import { AuthContext } from '../../context/authContext';
+import  AuthContext  from '../../context/authContext';
 
 export default function AccueilJSX() {
+  
   const {user} = useContext(AuthContext);
   console.log(user);
   return (

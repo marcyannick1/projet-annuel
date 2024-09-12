@@ -1,9 +1,9 @@
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
-import {AuthContext} from "../../context/authContext.jsx";
+import AuthContext from "../../context/authContext.jsx";
 import {Field, Form, Formik} from "formik";
 import {SignupSchema} from "../../schemas/signupSchema.js";
 import Welcome from "../../svg/register/Welcome.jsx";
@@ -28,8 +28,32 @@ const svgImages = [
     }
 ];
 
+
+
 const SignJSX = () => {
-    const {register, error} = useContext(AuthContext)
+    const [error, setError] = useState(null)
+    const navigate = useNavigate();
+    const handleSubmit = async (userData)=>{
+        setError(null)
+        try {
+            const response = await fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+    
+            if (response.ok) {
+                navigate("/LoginJSX");
+            } else {
+                const res = await response.json()
+                res.code === "P2002" ? setError("Email déja utilisé") : setError("Une erreur est survenue");
+            }
+        } catch (error) {
+            console.error('Erreur lors de la connexion :', error);
+        }
+    }
 
     const ErrorMessage = ({children}) => {
         return (
@@ -56,10 +80,7 @@ const SignJSX = () => {
                             confirmPassword: '',
                         }}
                         validationSchema={SignupSchema}
-                        onSubmit={(values) => {
-                            console.log('Form data:', values);
-                            register(values)
-                        }}
+                        onSubmit={handleSubmit}
                     >
                         {({setFieldValue, errors, touched}) => (
                             <Form className="login-form">
@@ -125,7 +146,7 @@ const SignJSX = () => {
 
                     <p className='lien-sign'>
                         Déjà un compte ?{' '}
-                        <Link to="/" className="create-account-link">Se Connecter</Link>
+                        <Link to="/LoginJSX" className="create-account-link">Se Connecter</Link>
                     </p>
                     {error &&
                         <Alert message={error} type="error" showIcon/>

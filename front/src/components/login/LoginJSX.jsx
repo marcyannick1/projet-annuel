@@ -3,7 +3,7 @@ import './LoginJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
 import {Link} from 'react-router-dom';
 import {Input, Button, Carousel, Alert} from 'antd';
-import {AuthContext} from "../../context/authContext.jsx";
+import AuthContext from "../../context/authContext.jsx";
 import {Field, Form, Formik} from "formik";
 import SecureLogin from "../../svg/login/SecureLogin.jsx";
 import Login from "../../svg/login/Login.jsx";

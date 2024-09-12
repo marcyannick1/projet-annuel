@@ -1,165 +1,270 @@
-import React, { useState } from 'react';
-import { Card, Col, Row, Button, Divider, Modal, Form, Input } from 'antd';
-import { UserOutlined, MailOutlined, HomeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Calendar } from 'antd';
+import React, { useContext, useRef, useState, useEffect } from 'react';
+import { Card, Button, Input, DatePicker, Modal, Row, Col, Statistic, Divider, Progress, Timeline, Badge } from 'antd';
+import { UserOutlined, MailOutlined, HomeOutlined, EditOutlined, DeleteOutlined, FileOutlined, MessageOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import { Field, Form, Formik } from "formik";
+import { EditProfileSchema } from "../../schemas/editProfileSchema.js";
+import dayjs from "dayjs";
 import './ProfilJSX.css';
+import AuthContext from "../../context/authContext.jsx";
 
-// Fonction pour générer les dates entre la date de création et aujourd'hui
-const generateActivityData = (startDate) => {
-  const data = [];
-  let currentDate = new Date(startDate);
-  const endDate = new Date(); // Date actuelle
+// Enregistrez les composants nécessaires pour ChartJS
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
-  while (currentDate <= endDate) {
-    data.push({
-      date: currentDate.toLocaleDateString(),
-      activity: Math.floor(Math.random() * 10) + 1, // Activité aléatoire entre 1 et 10
-    });
-    currentDate.setDate(currentDate.getDate() + 1); // Incrémenter d'un jour
-  }
+export default function Profil() {
+    const { user, updateUser, logout } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const formikRef = useRef(null);
+    const [modalState, setModalState] = useState({ type: null, visible: false });
 
-  return data;
-};
+    // Vérifiez l'état de connexion et redirigez si nécessaire
+    useEffect(() => {
+        if (!user) {
+            navigate("/LoginJSX");
+        }
+    }, [user, navigate]);
 
-export default function ProfilJSX() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
+    const showModal = (type) => {
+        setModalState({ type, visible: true });
+    };
 
-  const user = {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'johndoe@example.com',
-    birthDate: '01/01/1990',
-    address: '123 Rue de Paris, 75001 Paris',
-    accountCreationDate: '2024-08-29', // Date de création du compte (format ISO)
-  };
+    const handleModalOk = async () => {
+        if (modalState.type === 'edit') {
+            await formikRef.current.submitForm();
+            if (!formikRef.current.isSubmitting) {
+                setModalState({ type: null, visible: false });
+            }
+        } else if (modalState.type === 'delete') {
+            try {
+                await fetch(`http://localhost:3000/user/${user.id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+                logout();
+            } catch (error) {
+                console.error('Erreur lors de la suppression du compte :', error);
+            }
+            setModalState({ type: null, visible: false });
+        }
+    };
 
-  // Générer les données d'activité
-  const activityData = generateActivityData(user.accountCreationDate);
+    const handleModalCancel = () => {
+        if (modalState.type === 'edit') {
+            formikRef.current.resetForm();
+        }
+        setModalState({ type: null, visible: false });
+    };
 
-  const showModal = () => {
-    form.setFieldsValue(user); // Pré-remplir le formulaire avec les données utilisateur
-    setIsModalVisible(true);
-  };
+    const handleSubmit = async (userData) => {
+        try {
+            const response = await fetch(`http://localhost:3000/user/${user.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData),
+            });
+            updateUser(await response.json());
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-  const handleOk = () => {
-    form.validateFields()
-      .then((values) => {
-        console.log('Updated values:', values); // Ici, tu peux gérer la mise à jour des informations
-        setIsModalVisible(false); // Fermer la modal après soumission
-      })
-      .catch((info) => {
-        console.log('Validation Failed:', info);
-      });
-  };
+    const InputErrorMessage = ({ children }) => (
+        <div style={{ color: "crimson", fontSize: 12 }}>{children}</div>
+    );
 
-  const handleCancel = () => {
-    setIsModalVisible(false); // Fermer la modal sans enregistrer
-  };
+    const activityData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [
+            {
+                label: 'Activité du Compte',
+                data: [5, 10, 8, 12, 9, 14],
+                fill: false,
+                borderColor: '#1890ff',
+                tension: 0.1,
+            },
+        ],
+    };
 
-  return (
-    <div className='profile-page contain'>
-      <h2 className='page-title'>Mon Profil</h2>
+    return (
+        <div className='profile-page contain'>
+            <div className='profile-container'>
+                <h2 className='page-title'>Mon Profil</h2>
+                <p className='welcome-message'>Visualisez et gérez vos informations personnelles.</p>
 
-      <Row gutter={16}>
-        {/* Carte des informations personnelles */}
-        <Col span={12}>
-          <Card className='ant-card' title="Informations Personnelles" style={{ backgroundColor: '#f0f9ff' }}>
-            <p><UserOutlined style={{ color: '#1890ff' }} /> <strong>Nom :</strong> {user.lastName}</p>
-            <p><UserOutlined style={{ color: '#1890ff' }} /> <strong>Prénom :</strong> {user.firstName}</p>
-            <p><MailOutlined style={{ color: '#40a9ff' }} /> <strong>Email :</strong> {user.email}</p>
-            <p><HomeOutlined style={{ color: '#13c2c2' }} /> <strong>Adresse :</strong> {user.address}</p>
-            <p><UserOutlined style={{ color: '#faad14' }} /> <strong>Date de naissance :</strong> {user.birthDate}</p>
-            <p><UserOutlined style={{ color: '#faad14' }} /> <strong>Date de création du compte :</strong> {new Date(user.accountCreationDate).toLocaleDateString()}</p>
-            <Button type="primary" icon={<EditOutlined />} style={{ marginTop: '16px' }} onClick={showModal}>
-              Modifier mes informations
+                {user && (
+                    <>
+                        <Row gutter={24}>
+                            <Col xs={24} md={16}>
+                                <Card title="Informations Personnelles" bordered={false} style={{ borderRadius: '8px', backgroundColor: '#f0f9ff' }}>
+                                    <p><UserOutlined style={{ color: '#1890ff' }} /> <strong>Nom :</strong> {user.lastName}</p>
+                                    <p><UserOutlined style={{ color: '#1890ff' }} /> <strong>Prénom :</strong> {user.firstName}</p>
+                                    <p><MailOutlined style={{ color: '#40a9ff' }} /> <strong>Email :</strong> {user.email}</p>
+                                    <p><HomeOutlined style={{ color: '#13c2c2' }} /> <strong>Adresse :</strong> {user.address}</p>
+                                    <p><UserOutlined style={{ color: '#faad14' }} /> <strong>Date de naissance :</strong> {new Date(user.birthday).toLocaleDateString()}</p>
+                                    <Divider />
+                                    <Button type="primary" icon={<EditOutlined />} style={{ marginRight: '10px' }} onClick={() => showModal("edit")}>
+                                        Modifier mes informations
+                                    </Button>
+                                    <Button type="danger" icon={<DeleteOutlined />} onClick={() => showModal("delete")}>
+                                        Supprimer mon compte
+                                    </Button>
+                                </Card>
+                            </Col>
+
+                            <Col xs={24} md={8}>
+                                <Card title="Statistiques du Compte" bordered={false} style={{ borderRadius: '8px' }}>
+                                    <Statistic title="Fichiers Uploadés" value={32} prefix={<FileOutlined style={{ color: '#40a9ff' }} />} valueStyle={{ color: '#40a9ff' }} />
+                                    <Statistic title="Messages Non Lu" value={8} prefix={<MessageOutlined style={{ color: '#13c2c2' }} />} valueStyle={{ color: '#13c2c2' }} style={{ marginTop: '20px' }} />
+                                    <Divider />
+                                    <p><strong>Compte créé le :</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+                                </Card>
+                            </Col>
+                        </Row>
+
+                        <Divider />
+
+                        <Row gutter={24}>
+                            <Col xs={24} md={12}>
+                                <Card title="Activité du Compte" bordered={false} style={{ borderRadius: '8px' }}>
+                                    <Line data={activityData} />
+                                </Card>
+                            </Col>
+                            <Col xs={24} md={12}>
+                                <Card title="Récompenses" bordered={false} style={{ borderRadius: '8px' }}>
+                                    <Badge count="Nouveau" style={{ backgroundColor: '#52c41a' }} />
+                                    <Badge count="VIP" style={{ backgroundColor: '#faad14', marginLeft: '10px' }} />
+                                    <Badge count="Expert" style={{ backgroundColor: '#1890ff', marginLeft: '10px' }} />
+                                </Card>
+                            </Col>
+                        </Row>
+
+                        <Divider />
+
+                        <Card title="Historique d'Activité" bordered={false} style={{ borderRadius: '8px' }}>
+                            <Timeline
+                              items={[
+                                {
+                                  color: 'green',
+                                  children: `Création du compte - ${new Date(user.createdAt).toLocaleDateString()}`
+                                },
+                                {
+                                  color: 'blue',
+                                  children: `Mise à jour du profil - ${new Date().toLocaleDateString()}`
+                                },
+                                {
+                                  color: 'gray',
+                                  children: `Message envoyé - ${new Date().toLocaleDateString()}`
+                                }
+                              ]}
+                            />
+                        </Card>
+
+                        <Divider />
+
+                        <Card title="Résumé de l'Activité" bordered={false} style={{ borderRadius: '8px' }}>
+                            <Progress percent={75} strokeColor="#1890ff" />
+                        </Card>
+
+                        <Row gutter={16} style={{ marginTop: '20px' }}>
+                        <Col span={6}>
+          <Link to="/EspaceStockageJSX"> {/* Utilise Link pour créer un lien vers la route */}
+            <Button type="primary" block style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}>
+              <FileOutlined style={{ color: '#fff' }} /> Voir les fichiers
             </Button>
-          </Card>
-          
-          {/* Ajout du calendrier en dessous des informations personnelles */}
-          <Card className='ant-card' title="Calendrier des Activités" style={{ backgroundColor: '#f0f9ff', marginTop: '24px' }}>
-            <Calendar fullscreen={false} />
-          </Card>
-        </Col>
+      </Link>
 
-        {/* Carte des actions sur le compte */}
-        <Col span={12}>
-          <Card className='ant-card' title="Paramètres de Compte" style={{ backgroundColor: '#fffbe6' }}>
-            <Button type="danger" icon={<DeleteOutlined />}>Supprimer mon compte</Button>
-          </Card>
+          </Col>
+          <Col span={6}>
+        <Link to="/MessagesJSX"> {/* Utilise Link pour créer un lien vers la route */}
+            <Button type="primary" block style={{ backgroundColor:'#13c2c2', borderColor: '#13c2c2'}}>
+                <MessageOutlined style={{ color: '#fff' }} /> Voir mes messages
+            </Button>
+        </Link>
+    </Col>
+    <Col span={6}>
+        <Link to="/StatisitiquesJSX"> {/* Utilise Link pour créer un lien vers la route */}
+            <Button type="default" block style={{ backgroundColor:  '#faad14' , borderColor:  '#faad14',  color:  '#fff'  }}>
+                <UserOutlined /> Voir mes statistiques
+            </Button>
+        </Link>
+    </Col>
+                        </Row>
 
-          {/* Diagramme de l'activité */}
-          <Card className='ant-card' title="Activité du Compte" style={{ backgroundColor: '#fff', marginTop: '24px' }}>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={activityData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="activity" stroke="#1890ff" activeDot={{ r: 8 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </Card>
-        </Col>
-      </Row>
+                        <Modal
+                            title="Modifier mes informations"
+                            open={modalState.visible && modalState.type === 'edit'}
+                            onOk={handleModalOk}
+                            onCancel={handleModalCancel}
+                            okText={"Modifier"}
+                            cancelText={"Annuler"}
+                            centered
+                        >
+                            <Formik
+                                initialValues={{
+                                    firstName: user?.firstName,
+                                    lastName: user?.lastName,
+                                    birthday: user?.birthday,
+                                    address: user?.address,
+                                    email: user?.email,
+                                }}
+                                validationSchema={EditProfileSchema}
+                                innerRef={formikRef}
+                                onSubmit={handleSubmit}
+                            >
+                                {({ setFieldValue, errors, touched }) => (
+                                    <Form>
+                                        <div>
+                                            <label htmlFor="firstName">Prénom</label>
+                                            <Field name="firstName" as={Input} id="firstName" status={errors.firstName && touched.firstName ? "error" : null} />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="lastName">Nom</label>
+                                            <Field name="lastName" as={Input} id="lastName" status={errors.lastName && touched.lastName ? "error" : null} />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="birthday">Date de naissance</label>
+                                            <DatePicker
+                                                format="DD/MM/YYYY"
+                                                defaultValue={dayjs(user?.birthday)}
+                                                onChange={(date) => setFieldValue('birthday', date ? date.toDate().toISOString() : null)}
+                                                style={{ width: "100%" }}
+                                                status={errors.birthday && touched.birthday ? "error" : null}
+                                                placeholder="Sélectionner une date"
+                                                allowClear={false}
+                                            />
+                                            <InputErrorMessage>{errors.birthday && touched.birthday ? errors.birthday : null}</InputErrorMessage>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="address">Adresse</label>
+                                            <Field name="address" as={Input} id="address" status={errors.address && touched.address ? "error" : null} />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="email">Adresse mail</label>
+                                            <Field name="email" as={Input} id="email" status={errors.email && touched.email ? "error" : null} />
+                                            <InputErrorMessage>{errors.email && touched.email ? errors.email : null}</InputErrorMessage>
+                                        </div>
+                                    </Form>
+                                )}
+                            </Formik>
+                        </Modal>
 
-      <Divider />
-
-      {/* Carte des statistiques du compte */}
-      <Row gutter={16}>
-        <Col span={8}>
-          <Card className='ant-card' style={{ backgroundColor: '#e6f7ff' }}>
-            <p><strong>Nombre de connexions :</strong> 15</p>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card className='ant-card' style={{ backgroundColor: '#e6fffb' }}>
-            <p><strong>Dernière connexion :</strong> 04/09/2024</p>
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card className='ant-card' style={{ backgroundColor: '#f0f9ff' }}>
-            <p><strong>Nombre de projets créés :</strong> 3</p>
-          </Card>
-        </Col>
-      </Row>
-
-      <Divider />
-
-      {/* Notifications */}
-      <div className='notifications'>
-        <h3>Notifications</h3>
-        <p>Vous avez 3 nouvelles notifications.</p>
-      </div>
-
-      {/* Modal pour modifier les informations */}
-      <Modal
-        title="Modifier mes informations"
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Enregistrer"
-        cancelText="Annuler"
-      >
-        <Form form={form} layout="vertical" name="userForm">
-          <Form.Item name="lastName" label="Nom" rules={[{ required: true, message: 'Veuillez entrer votre nom' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="firstName" label="Prénom" rules={[{ required: true, message: 'Veuillez entrer votre prénom' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Veuillez entrer votre email' }, { type: 'email', message: 'Veuillez entrer un email valide' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="address" label="Adresse">
-            <Input />
-          </Form.Item>
-          <Form.Item name="birthDate" label="Date de naissance">
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
-  );
+                        <Modal
+                            title="Supprimer le compte"
+                            open={modalState.visible && modalState.type === 'delete'}
+                            onOk={handleModalOk}
+                            onCancel={handleModalCancel}
+                            okText={"Supprimer"}
+                            cancelText={"Annuler"}
+                            okButtonProps={{ danger: true }}
+                            centered
+                        >
+                            Voulez-vous vraiment supprimer votre compte ?
+                        </Modal>
+                    </>
+                )}
+            </div>
+        </div>
+    );
 }

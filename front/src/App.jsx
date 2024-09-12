@@ -29,6 +29,8 @@ function App() {
       <DashboardJSX>
         <Routes>
           <Route path="/" element={<AccueilJSX />} />
+          <Route path="/LoginJSX" element={<LoginJSX />} />
+          <Route path="/SignJSX" element={<SignJSX />} />
           <Route path="/UsersJSX" element={<UsersJSX />} />
           <Route path="/AccueilJSX" element={<AccueilJSX />} />
           <Route path="/EspaceStockageJSX" element={<EspaceStockageJSX />} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser, faChevronDown, faChevronUp, faCartShopping, faHome } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -13,14 +13,18 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
-import './DashboardJSX.css';
 import { Link } from 'react-router-dom';
+import AuthContext from '../../context/authContext';
+import './DashboardJSX.css';
+import logo_ctos from '../../assets/logo_ctos.png';
+
+
 
 // Données du menu
 const items = [
   {
-    key: 'home',  // Clé unique pour l'élément Home
-    icon: <FontAwesomeIcon icon={faHome} />,  // Icône Home
+    key: 'home',
+    icon: <FontAwesomeIcon icon={faHome} />,
     label: <Link to="/AccueilJSX">Home</Link>,
   },
   {
@@ -35,9 +39,8 @@ const items = [
   },
   {
     key: '2',
-    icon: < ContainerOutlined/>,
+    icon: <ContainerOutlined />,
     label: <Link to="/EspaceStockageJSX">Espaces de Stockage</Link>,
-
   },
   {
     key: 'sub1',
@@ -61,48 +64,48 @@ const items = [
         label: 'Changez votre mot de passe',
       },
     ],
-  }
-  ,{
+  },
+  {
     key: 'sub3',
     label: <Link to="/FacturesJSX">Mes factures</Link>,
-    icon: <FileTextOutlined />, // Icône de factures d'Ant Design
+    icon: <FileTextOutlined />,
   },
   {
     key: 'sub2',
     label: <Link to="/AchatEspaceJSX">Achat Espace</Link>,
-    icon: <FontAwesomeIcon icon={faCartShopping} />, // Icône de panier d'achat
+    icon: <FontAwesomeIcon icon={faCartShopping} />,
   },
   {
-    key: 'user-profil', // Clé unique pour l'élément de déconnexion
-    icon: <FontAwesomeIcon icon={faCircleUser} />, // Icône de profil-user
-    label: <Link to="ProfilJSX">Voir mon Compte</Link>,
-
-    style: { position: 'absolute', bottom: 42, width: '100%' } // Position en bas du menu
+    key: 'user-profil',
+    icon: <FontAwesomeIcon icon={faCircleUser} />,
+    label: <Link to="/ProfilJSX">Voir mon Compte</Link>,
+    style: { position: 'absolute', bottom: 42, width: '100%' }
   },
   {
-    key: 'logout', // Clé unique pour l'élément de déconnexion
-    icon: <LogoutOutlined />, // Icône de déconnexion
+    key: 'logout',
+    icon: <LogoutOutlined />,
     label: 'Logout',
-    style: { position: 'absolute', bottom: 0, width: '100%' } // Position en bas du menu
+    style: { position: 'absolute', bottom: 0, width: '100%' }
   },
 ];
 
 const DashboardJSX = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [roleVisible, setRoleVisible] = useState(false); // État pour la visibilité du rôle
+  const [roleVisible, setRoleVisible] = useState(false);
+  const { logout } = useContext(AuthContext); // Utilisation du contexte d'authentification
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
   const toggleRoleVisibility = () => {
-    setRoleVisible(!roleVisible); // Basculer la visibilité du rôle
+    setRoleVisible(!roleVisible);
   };
 
   const handleMenuClick = ({ key }) => {
     if (key === 'logout') {
-      // Logique de déconnexion ici
-      console.log('Logout clicked');
+      // Appel à la fonction de déconnexion
+      logout();
     }
   };
 
@@ -121,8 +124,8 @@ const DashboardJSX = ({ children }) => {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           <Menu
-            onClick={handleMenuClick} // Gestion des clics sur les éléments du menu
-            defaultSelectedKeys={['home']} // Sélectionne "Home" par défaut
+            onClick={handleMenuClick}
+            defaultSelectedKeys={['home']}
             defaultOpenKeys={['sub1']}
             mode="inline"
             theme="dark"
@@ -133,9 +136,8 @@ const DashboardJSX = ({ children }) => {
       </aside>
       <div className="content">
         <header className="header">
-          <div className="search-bar">
-            <input type="text" placeholder="Rechercher..." />
-          </div>
+        <img src={logo_ctos} alt="logo CTOS" style={{ width: '120px', height: 'auto' }} />
+
           <div className="user-info">
             <span className="user-name" onClick={toggleRoleVisibility}>
               <FontAwesomeIcon icon={faCircleUser} /> mouakassarufus@gmail.com
