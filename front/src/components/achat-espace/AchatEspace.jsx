@@ -1,46 +1,33 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Card, message, notification} from 'antd';
 import {MailOutlined, FileOutlined} from '@ant-design/icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCartShopping} from '@fortawesome/free-solid-svg-icons';
-import styles from './AchatEspace.module.css'; // Assurez-vous d'ajouter ce fichier pour les styles personnalisés si nécessaire
-
-const buttonStyles = {
-    backgroundColor: '#4CAF50',
-    borderColor: '#4CAF50',
-    color: '#fff',
-};
-
-const buttonHoverStyles = {
-    backgroundColor: '#45a049',
-    borderColor: '#45a049',
-    color: '#fff',
-};
+import styles from './AchatEspace.module.css';
+import authContext from "../../context/authContext.jsx"; // Assurez-vous d'ajouter ce fichier pour les styles personnalisés si nécessaire
 
 const AchatEspace = () => {
+    const {user} = useContext(authContext)
     const [loading, setLoading] = useState(false);
 
     const handlePurchase = async () => {
         setLoading(true);
+
         try {
-            // Simule l'achat
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            const subscription = await fetch("http://localhost:3000/subscription", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: user.id })
+            })
 
-            // Notification de confirmation
-            notification.success({
-                message: 'Achat Réussi',
-                description: 'Votre espace de stockage a été augmenté de 20 Go. Une facture est maintenant disponible dans votre compte.',
-                icon: <FileOutlined style={{color: '#4CAF50'}}/>,
-            });
-
-            // Simuler l'envoi d'un email (à intégrer avec un service réel)
-            message.success('Un email de confirmation a été envoyé.');
-
-            // Réinitialiser l'état
-            setLoading(false);
+            console.log(await subscription.json());
+            message.success('Achat effectué');
         } catch (error) {
             message.error('Une erreur est survenue lors de l\'achat.');
-            setLoading(false);
+        }finally {
+            setLoading(false)
         }
     };
 
@@ -60,15 +47,6 @@ const AchatEspace = () => {
                     icon={<FontAwesomeIcon icon={faCartShopping}/>}
                     loading={loading}
                     onClick={handlePurchase}
-                    style={buttonStyles}
-                    onMouseEnter={(e) => {
-                        e.target.style.backgroundColor = buttonHoverStyles.backgroundColor;
-                        e.target.style.borderColor = buttonHoverStyles.borderColor;
-                    }}
-                    onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = buttonStyles.backgroundColor;
-                        e.target.style.borderColor = buttonStyles.borderColor;
-                    }}
                 >
                     Acheter Maintenant
                 </Button>

@@ -1,31 +1,38 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Table, Button, Upload, Popconfirm, Empty, Input, Select} from 'antd';
+import {Table, Button, Upload, Popconfirm, Empty, Input, Select, Spin} from 'antd';
 import {UploadOutlined, DeleteOutlined} from '@ant-design/icons';
 import styles from './EspaceStockage.module.css';
 import AuthContext from "../../context/authContext.jsx";
 import {filesize} from "filesize";
 
-const { Option } = Select;
+const {Option} = Select;
 
 export default function EspaceStockage() {
     const {user} = useContext(AuthContext);
     const [files, setFiles] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFormat, setSelectedFormat] = useState(null);
-  
+    const [uploadLoading, setUploadLoading] = useState(false)
+
     // // Fonction pour uploader un fichier
     const handleUpload = async ({file}) => {
+        setUploadLoading(true)
         const formData = new FormData();
         formData.append('files', file);
         formData.append('userId', user.id);
+        try {
+            const response = await fetch("http://localhost:3000/file", {
+                method: 'POST',
+                body: formData
+            })
 
-        const response = await fetch("http://localhost:3000/file", {
-            method: 'POST',
-            body: formData
-        })
-
-        const data = await response.json();
-        setFiles([...files, ...data.files])
+            const data = await response.json();
+            setFiles([...files, ...data.files])
+        }catch (e){
+            console.error(e);
+        }finally {
+            setUploadLoading(false)
+        }
 
     };
 
@@ -92,7 +99,7 @@ export default function EspaceStockage() {
             key: 'size',
             sorter: (a, b) => parseFloat(a.size) - parseFloat(b.size),
             render: (text) => (
-                <p>{filesize(text, {symbols : {B: "octet(s)", kB: "Ko", MB: "Mo", GB: "Go"}})}</p>
+                <p>{filesize(text, {symbols: {B: "octet(s)", kB: "Ko", MB: "Mo", GB: "Go"}})}</p>
             )
         },
         {
@@ -117,7 +124,7 @@ export default function EspaceStockage() {
                     okText="Oui"
                     cancelText="Non"
                 >
-                    <Button type="primary" danger icon={<DeleteOutlined />}>
+                    <Button type="primary" danger icon={<DeleteOutlined/>}>
                         Supprimer
                     </Button>
                 </Popconfirm>
@@ -176,6 +183,8 @@ export default function EspaceStockage() {
                 </Upload>
             </div>
 
+            {uploadLoading && <Spin tip="Upload en cours..." fullscreen />}
+
             {files.length > 0 ? (
                 <Table
                     columns={columns}
@@ -186,19 +195,7 @@ export default function EspaceStockage() {
                 <div style={{marginTop: 20, textAlign: 'center'}}>
                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Aucun fichier disponible"/>
                 </div>
-
-                {files.length > 0 ? (
-                    <Table
-                        columns={columns}
-                        dataSource={processFiles()}
-                        style={{ marginTop: 20 }}
-                    />
-                ) : (
-                    <div style={{ marginTop: 20, textAlign: 'center' }}>
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Aucun fichier disponible" />
-                    </div>
-                )}
-            </Col>
-        </Row>
-    );
+            )}
+        </div>
+    )
 }
