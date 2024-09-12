@@ -129,7 +129,7 @@ const data = [
 const Users = () => {
   return (
 
-      <div className="users-page">
+      <div className="users-page contain">
               <h2 className='page-title'>Utilisateurs</h2>
 
         <div className="actions">

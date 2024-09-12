@@ -1,6 +1,5 @@
 .dashboard-layout {
     display: flex;
-    height: 100vh;
   }
   
 
@@ -27,24 +26,22 @@
     cursor: pointer;
   }
   
-  .content {
+  .dashboard-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #e5e9f4;
+    /*background-color: #e5e9f4;*/
     /* padding: 20px; */
-    width: 1540px;
+    /*width: 1540px;*/
   }
   
   .header {
     display: flex;
     justify-content: space-between;
     padding: 16px;
-    margin-left: 140px;
     margin-bottom: 20px;
     background: #fff;
     border-bottom: 1px solid #ddd;
-    width: 1400px;
   }
   
   .search-bar input {
@@ -146,11 +143,6 @@
 
 .sidebar .ant-menu {
   border-right: 0;
-}
-
-.content {
-  margin-left: 136px; /* Laisser de l'espace pour la barre latérale */
-  min-height: 100vh;
 }
 
 .header {
