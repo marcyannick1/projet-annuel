@@ -1,103 +1,106 @@
-import React from 'react';
-import { Table, Button, Typography, Space, Card } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import React, {useContext, useEffect, useState} from 'react';
+import {Table, Button, Typography} from 'antd';
+import {DownloadOutlined} from '@ant-design/icons';
 import './FacturesJSX.css';
+import authContext from "../../context/authContext.jsx";
 
-const { Title, Text } = Typography;
+const {Title} = Typography;
 
-const FacturesJSX = () => {
-  const dataSource = [
-    {
-      key: '1',
-      date: '2024-08-01',
-      designation: 'Achat Espace 20Go',
-      quantity: 1,
-      price: '20€',
-      tva: '4€',
-      total: '24€',
-      client: {
-        name: 'John Doe',
-        address: '123 Rue de Paris, 75001 Paris, France',
-      },
-      company: {
-        name: 'Ma Société',
-        address: '456 Avenue des Champs-Élysées, 75008 Paris, France',
-        siret: '123 456 789 00010',
-      },
-    },
-  ];
+const Factures = () => {
+  const {user} = useContext(authContext);
+  const [subscriptions, setSubscriptions] = useState([]);
 
   const columns = [
     {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
+      title: "Date",
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (date) => new Date(date).toLocaleDateString(),
+      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
       title: 'Désignation',
       dataIndex: 'designation',
       key: 'designation',
+      render: () => (<p>Achat Stockage 20Go</p>)
     },
     {
       title: 'Quantité',
       dataIndex: 'quantity',
       key: 'quantity',
+      render: () => (<p>1</p>)
     },
     {
       title: 'Prix HT',
       dataIndex: 'price',
       key: 'price',
+      render: () => (<p>16,67€</p>)
     },
     {
       title: 'TVA',
       dataIndex: 'tva',
       key: 'tva',
+      render: () => (<p>3,33€</p>)
     },
     {
       title: 'Total TTC',
       dataIndex: 'total',
       key: 'total',
+      render: () => (<p>20€</p>)
     },
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Button icon={<DownloadOutlined />} type="primary">
-          Télécharger
-        </Button>
+      render: () => (
+          <Button icon={<DownloadOutlined/>} type="primary">
+            Télécharger
+          </Button>
       ),
     },
   ];
 
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      const subscriptions = await fetch(`http://localhost:3000/subscription/${user.id}`)
+      const data = await subscriptions.json();
+      console.log(data)
+
+      data.length ? setSubscriptions(data) : null
+    };
+
+    fetchSubscriptions()
+  }, [user]);
+
   return (
-    <div className="factures-container contain">
-      <Title level={2} className="title">Mes Factures</Title>
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        pagination={false}
-        className="factures-table"
-      />
-      <Card className="factures-card">
-        <Title level={4}>Informations Client</Title>
-        <Text>Nom: {dataSource[0].client.name}</Text><br />
-        <Text>Adresse: {dataSource[0].client.address}</Text>
+      <div className="factures_container contain">
+        <Title level={2}>Mes Factures</Title>
+        <Table
+            dataSource={subscriptions}
+            columns={columns}
+            pagination={false}
+            style={{marginTop: 20, boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}
+        />
+        {/* Plus d'informations sur la facture */}
+        {/*<Space direction="vertical" style={{marginTop: 40}}>*/}
+        {/*    <Title level={4}>Informations Client</Title>*/}
+        {/*    <p>Nom: {dataSource[0].client.name}</p>*/}
+        {/*    <p>Adresse: {dataSource[0].client.address}</p>*/}
 
-        <Title level={4}>Informations Société</Title>
-        <Text>Nom: {dataSource[0].company.name}</Text><br />
-        <Text>Adresse: {dataSource[0].company.address}</Text><br />
-        <Text>SIRET: {dataSource[0].company.siret}</Text>
+        {/*    <Title level={4}>Informations Société</Title>*/}
+        {/*    <p>Nom: {dataSource[0].company.name}</p>*/}
+        {/*    <p>Adresse: {dataSource[0].company.address}</p>*/}
+        {/*    <p>SIRET: {dataSource[0].company.siret}</p>*/}
 
-        <Title level={4}>Détails de la Facture</Title>
-        <Text>Date: {dataSource[0].date}</Text><br />
-        <Text>Désignation: {dataSource[0].designation}</Text><br />
-        <Text>Quantité: {dataSource[0].quantity}</Text><br />
-        <Text>Prix Unitaire HT: {dataSource[0].price}</Text><br />
-        <Text>Montant TVA: {dataSource[0].tva}</Text><br />
-        <Text>Total TTC: {dataSource[0].total}</Text>
-      </Card>
-    </div>
+        {/*    <Title level={4}>Détails de la Facture</Title>*/}
+        {/*    <p>Date: {dataSource[0].date}</p>*/}
+        {/*    <p>Désignation: {dataSource[0].designation}</p>*/}
+        {/*    <p>Quantité: {dataSource[0].quantity}</p>*/}
+        {/*    <p>Prix Unitaire HT: {dataSource[0].price}</p>*/}
+        {/*    <p>Montant TVA: {dataSource[0].tva}</p>*/}
+        {/*    <p>Total TTC: {dataSource[0].total}</p>*/}
+        {/*</Space>*/}
+      </div>
   );
 };
 
-export default FacturesJSX;
+export default Factures;
