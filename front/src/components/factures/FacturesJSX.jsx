@@ -3,7 +3,7 @@ import {Table, Button, Typography} from 'antd';
 import {DownloadOutlined} from '@ant-design/icons';
 import './FacturesJSX.css';
 import authContext from "../../context/authContext.jsx";
-import {PDFDownloadLink, PDFViewer} from "@react-pdf/renderer";
+import {PDFDownloadLink} from "@react-pdf/renderer";
 import FacturePDF from "./FacturePDF.jsx";
 
 const {Title} = Typography;
