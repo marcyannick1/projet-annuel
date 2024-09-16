@@ -140,16 +140,7 @@ export default function EspaceStockage() {
       const data = await files.json();
       console.log(data)
 
-      const filteredFiles = data.map((file) => ({
-        id: file.id,
-        name: file.name,
-        size: file.size,
-        createdAt: file.createdAt,
-        format: file.format,
-        url: file.url
-      }));
-
-      setFiles(filteredFiles)
+      setFiles(data)
     };
 
     fetchFiles()
