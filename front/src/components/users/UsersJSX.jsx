@@ -1,13 +1,14 @@
 import React from 'react';
 import { Space, Table, Tag, Button, Popconfirm } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { DownloadOutlined, FileTextOutlined } from '@ant-design/icons';
 import { FloatButton } from 'antd';
-import DashboardJSX from '../dashboard/DashboardJSX';
+import './UsersJSX.css'; // Pour gérer le style cohérent
 
 // Définition des colonnes du tableau
-const columns = [
+const columns = (navigate) => [
   {
     title: 'Photo',
     dataIndex: 'photo',
@@ -47,7 +48,7 @@ const columns = [
         <Button 
           type="primary" 
           icon={<FileTextOutlined />}
-          onClick={() => console.log('View Files for', record.name)}
+          onClick={() => navigate(`/viewFilesJSX/${record.key}`)} // Redirection vers la page des fichiers de l'utilisateur
         >
           View Files
         </Button>
@@ -127,20 +128,20 @@ const data = [
 ];
 
 const Users = () => {
+  const navigate = useNavigate();
+
   return (
-
-      <div className="users-page contain">
-              <h2 className='page-title'>Utilisateurs</h2>
-
-        <div className="actions">
-          <Button type="primary" icon={<DownloadOutlined />}>
-            Download
-          </Button>
-          <FloatButton icon={<FileTextOutlined />} description="" onClick={() => console.log('onClick')} />
-          <Button type="primary">Add new</Button>
-        </div>
-        <Table columns={columns} dataSource={data} pagination={false} />
+    <div className="users-page contain">
+      <h2 className='page-title'>Utilisateurs</h2>
+      <div className="actions">
+        <Button type="primary" icon={<DownloadOutlined />}>
+          Download
+        </Button>
+        <FloatButton icon={<FileTextOutlined />} description="" onClick={() => console.log('onClick')} />
+        <Button type="primary">Add new</Button>
       </div>
+      <Table columns={columns(navigate)} dataSource={data} pagination={false} />
+    </div>
   );
 };
 
