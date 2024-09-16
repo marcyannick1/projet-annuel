@@ -144,6 +144,7 @@ export default function EspaceStockageJSX() {
           <Option value={null}>Tous les formats</Option>
           <Option value="pdf">PDF</Option>
           <Option value="jpg">JPG</Option>
+          <Option value="png">PNG</Option>
           <Option value="ppt">PPT</Option>
         </Select>
         <Upload

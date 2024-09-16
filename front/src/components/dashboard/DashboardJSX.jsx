@@ -29,7 +29,7 @@ const DashboardJSX = ({ children }) => {
     <div className="dashboard-layout">
       <div className="dashboard-content contain">
         <header className="header">
-        <img src={logo_ctos} alt="logo CTOS" style={{ width: '120px', height: 'auto' }} />
+        <img src={logo_ctos} alt="logo CTOS" style={{ width: '115px', height: '50px' }} />
 
           <div className="user-info">
             <span className="user-name" onClick={toggleRoleVisibility}>

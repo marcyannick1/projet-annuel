@@ -1,0 +1,19 @@
+/* ViewFilesJSX.css */
+.view-files-page {
+    padding: 20px;
+  }
+  
+  .view-files-page .page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .view-files-page .ant-table {
+    background-color: white;
+  }
+  .table-container {
+    margin-top: 30px;
+    max-height: 400px; /* Ajustez la hauteur maximale selon vos besoins */
+    overflow-y: auto;
+  }
+  
