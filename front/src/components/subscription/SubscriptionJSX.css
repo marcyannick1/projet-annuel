@@ -1,0 +1,74 @@
+/* Assurer que le corps de la page ne défile pas */
+body, html {
+
+  }
+  
+  .subscription-page {
+    display: flex;
+    height: 100vh; /* Hauteur de la fenêtre du navigateur */
+  }
+  .subscription-image {
+    width: auto;
+    top: 0;
+    height: 90%;
+    right: 0;
+    position: absolute;
+    
+  }
+  .left-side {
+    background-color: #ffffff;
+    position: relative;
+
+    width: 30%;
+    height: 100%;
+    /* background-image: url('../../assets/image_gif.png'); Chemin relatif à l'image */
+    background-size: contain; /* L'image sera ajustée pour s'afficher entièrement */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Évite la répétition de l'image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Assure que rien ne dépasse de la zone */
+  }
+  
+  .right-side {
+    background-color: #a1c4fb;
+    position: absolute;
+    width: 70%;
+    height: 100%;
+    right: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .subscription-page .ant-card {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 20px;
+    text-align: center; /* Centre le texte dans la carte */
+  }
+  
+  .subscription-page .ant-typography-title {
+    color: #1890ff;
+  }
+  
+  .subscription-page .ant-typography-paragraph {
+    color: #595959;
+  }
+  
+  .subscription-page .ant-btn-primary {
+    background-color: #1890ff;
+    border-color: #1890ff;
+  }
+  
+  .subscription-page .ant-btn-primary:hover {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+  }
+  

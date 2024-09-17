@@ -82,7 +82,7 @@ const SignJSX = () => {
 
                     <p className='lien-sign'>
                         Vous n'avez pas de compte?{' '}
-                        <Link to="/SignJsx" className="create-account-link">S'inscrire</Link>
+                        <Link to="/SignJSX" className="create-account-link">S'inscrire</Link>
                     </p>
                     {error &&
                         <Alert message={error} type="error" showIcon/>

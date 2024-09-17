@@ -1,20 +1,37 @@
-import {Button, Menu} from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Menu } from "antd";
 import {
     ContainerOutlined,
-    DesktopOutlined, FileTextOutlined, LogoutOutlined, MailOutlined,
+    DesktopOutlined,
+    FileTextOutlined,
+    LogoutOutlined,
+    MailOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     PieChartOutlined
 } from "@ant-design/icons";
-import React, {useContext, useState} from "react";
 import AuthContext from "../../context/authContext.jsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Link} from "react-router-dom";
-import {faCartShopping, faCircleUser, faHome} from "@fortawesome/free-solid-svg-icons";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import { faCartShopping, faCircleUser, faHome } from "@fortawesome/free-solid-svg-icons";
 
 const SideBar = () => {
-    // Données du menu
+    const { user, logout } = useContext(AuthContext); // Utilisation du contexte d'authentification
+    const [isSubscribed, setIsSubscribed] = useState(false); // État pour vérifier l'abonnement
+    const [collapsed, setCollapsed] = useState(false);
+
+    const handleMenuClick = ({ key }) => {
+        if (key === 'logout') {
+            // Appel à la fonction de déconnexion
+            logout();
+        }
+    };
+
+    const toggleCollapsed = () => {
+        setCollapsed(!collapsed);
+    };
+
+    // Les éléments du menu
     const items = [
         {
             key: 'home',
@@ -41,27 +58,15 @@ const SideBar = () => {
             label: 'Messages',
             icon: <MailOutlined />,
             children: [
-                {
-                    key: '5',
-                    label: 'Nouveaux Utilisateurs',
-                },
-                {
-                    key: '6',
-                    label: 'Création de nouveau compte',
-                },
-                {
-                    key: '7',
-                    label: 'Compte supprimé',
-                },
-                {
-                    key: '8',
-                    label: 'Changez votre mot de passe',
-                },
+                { key: '5', label: 'Nouveaux Utilisateurs' },
+                { key: '6', label: 'Création de nouveau compte' },
+                { key: '7', label: 'Compte supprimé' },
+                { key: '8', label: 'Changez votre mot de passe' },
             ],
         },
         {
             key: 'sub3',
-            label: <Link to="/FacturesJSX">Mes factures</Link>,
+            label: <Link to="/FacturesJSX">Mes Factures</Link>,
             icon: <FileTextOutlined />,
         },
         {
@@ -82,20 +87,8 @@ const SideBar = () => {
             style: { position: 'absolute', bottom: 0, width: '100%' }
         },
     ];
-    const { logout } = useContext(AuthContext); // Utilisation du contexte d'authentification
 
-    const [collapsed, setCollapsed] = useState(false);
-
-    const handleMenuClick = ({ key }) => {
-        if (key === 'logout') {
-            // Appel à la fonction de déconnexion
-            logout();
-        }
-    };
-
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed);
-    };
+    // Affiche la barre de menu uniquement si l'utilisateur a un abonnement
     return (
         <aside className="sidebar">
             <div>
@@ -107,7 +100,7 @@ const SideBar = () => {
                         width: '100%',
                     }}
                 >
-                    {collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
+                    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 </Button>
                 <Menu
                     onClick={handleMenuClick}
@@ -120,7 +113,7 @@ const SideBar = () => {
                 />
             </div>
         </aside>
-    )
-}
+    );
+};
 
 export default SideBar;

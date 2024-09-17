@@ -20,6 +20,7 @@ import BackgroundJSX from './components/background/BackgroundJSX'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import SideBar from "./components/SideBar/Sidebar.jsx";
+import SubscriptionJSX from './components/subscription/SubscriptionJSX.jsx';
 
 
 function App() {
@@ -40,7 +41,9 @@ function App() {
                 <Route path="/AchatEspaceJSX" element={<AchatEspaceJSX/>}/>
                 <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX/>}/>
                 <Route path="/ProfilJSX" element={<ProfilJSX/>}/>
+                <Route path="/SubscriptionJSX" element={<SubscriptionJSX/>}/>
             </Routes>
+
         </>
 
     )
