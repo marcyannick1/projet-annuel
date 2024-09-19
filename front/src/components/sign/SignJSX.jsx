@@ -1,14 +1,15 @@
-import {useContext, useState} from 'react';
+import {useState} from 'react';
 import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
 import {Link, useNavigate} from 'react-router-dom';
 import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
-import AuthContext from "../../context/authContext.jsx";
 import {Field, Form, Formik} from "formik";
 import {SignupSchema} from "../../schemas/signupSchema.js";
 import Welcome from "../../svg/register/Welcome.jsx";
 import SignUp from "../../svg/register/SignUp.jsx";
 import Gift from "../../svg/register/Gift.jsx";
+import {render} from "@react-email/render";
+import InscriptionEmailJSX from "../emails/InscriptionEmailJSX.jsx";
 
 const svgImages = [
     {
@@ -45,6 +46,18 @@ const SignJSX = () => {
             });
     
             if (response.ok) {
+                const sendEmail = await fetch('http://localhost:3000/email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: userData.email,
+                        subject: "Bienvenue!",
+                        html: await render(<InscriptionEmailJSX userFirstname={userData.firstName}/>)
+                    }),
+                });
+                console.log(await sendEmail)
                 navigate("/LoginJSX");
             } else {
                 const res = await response.json()

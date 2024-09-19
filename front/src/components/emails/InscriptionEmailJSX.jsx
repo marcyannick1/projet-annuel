@@ -9,6 +9,7 @@ import {
   Preview,
   Section,
   Text,
+    Img
 } from "@react-email/components";
 import logo from "../../assets/logo_ctos.png";
 
@@ -20,7 +21,7 @@ export default function InscriptionEmailJSX({ userFirstname }) {
       <Body style={main}>
         <Container style={container}>
           <Section style={headerSection}>
-            <img
+            <Img
               src={logo}
               width="140"
               height="59"
