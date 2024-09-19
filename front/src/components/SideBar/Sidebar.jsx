@@ -43,19 +43,21 @@ const SideBar = () => {
             children: [
                 {
                     key: '5',
-                    label: 'Nouveaux Utilisateurs',
+                    label: <Link to="/InscriptionEmailJSX">Nouveaux Utilisateurs</Link>,
+
                 },
                 {
                     key: '6',
-                    label: 'Création de nouveau compte',
+                    label: <Link to="/NouveauCompteAdminEmailJSX">Création de nouveau compte</Link>,
                 },
                 {
                     key: '7',
-                    label: 'Compte supprimé',
+                    label: <Link to="/SuppressionCompteEmailJSX">Compte supprimé</Link>,
                 },
                 {
                     key: '8',
-                    label: 'Changez votre mot de passe',
+                    label: <Link to="/SuppressionCompteAdminEmailJSX">Compte supprimé Admin</Link>,
+
                 },
             ],
         },

@@ -20,6 +20,10 @@ import BackgroundJSX from './components/background/BackgroundJSX'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import SideBar from "./components/SideBar/Sidebar.jsx";
+import InscriptionEmailJSX from './components/emails/InscriptionEmailJSX.jsx';
+import SuppressionCompteEmailJSX from './components/emails/SuppressionCompteEmailJSX.jsx';
+import NouveauCompteAdminEmailJSX from './components/emails/NouveauCompteAdminEmailJSX.jsx';
+import SuppressionCompteAdminEmailJSX from './components/emails/SuppressionCompteAdminEmailJSX.jsx';
 
 
 function App() {
@@ -40,6 +44,13 @@ function App() {
                 <Route path="/AchatEspaceJSX" element={<AchatEspaceJSX/>}/>
                 <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX/>}/>
                 <Route path="/ProfilJSX" element={<ProfilJSX/>}/>
+                <Route path="/SuppressionCompteEmailJSX" element={<SuppressionCompteEmailJSX/>}/>
+                <Route path="/SuppressionCompteAdminEmailJSX" element={<SuppressionCompteAdminEmailJSX/>}/>
+                <Route path="/InscriptionEmailJSX" element={<InscriptionEmailJSX/>}/>
+                <Route path="/NouveauCompteAdminEmailJSX" element={<NouveauCompteAdminEmailJSX/>}/>
+
+                
+
             </Routes>
         </>
 
