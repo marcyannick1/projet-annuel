@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import {Table, Button, Card, Row, Col, Statistic, Progress, Input, Skeleton, Space, Flex} from 'antd';
+import {Table, Button, Card, Row, Col, Statistic, Progress, Input, Skeleton, Space, Flex, Tag} from 'antd';
 import {DownloadOutlined, SearchOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import './ViewFilesJSX.css'; // Utilisez le style cohérent avec le reste
 import moment from 'moment';
@@ -25,7 +25,7 @@ const ViewFilesJSX = () => {
             const data = await files.json();
             console.log(data)
 
-            setUserFiles(data)
+            data.length ? setUserFiles(data) : null
         };
 
         const fetchSubscriptions = async () => {
@@ -34,7 +34,6 @@ const ViewFilesJSX = () => {
             console.log(data)
 
             data.length ? setUserSubscriptions(data) : null
-            setLoading(false)
         };
 
         fecthUser()
@@ -42,12 +41,9 @@ const ViewFilesJSX = () => {
         fetchSubscriptions()
     }, [userId])
 
-    const determinePercent = () => {
-        const filesSize = userFiles.reduce((acc, file) => acc + file.size, 0)
-        const totalStorage = userSubscriptions.length * 21474836480
-
-        return filesSize * 100 / totalStorage
-    }
+    const totalFilesSize = userFiles.reduce((acc, file) => acc + file.size, 0)
+    const totalStorage = userSubscriptions.length * 20000000000
+    const progressPercent = totalFilesSize * 100 / totalStorage
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
@@ -130,10 +126,10 @@ const ViewFilesJSX = () => {
                         <h3>{userInfo.name}</h3>
                         <p>Email : {userInfo.email}</p>
                         <p>Adresse : {userInfo.address}</p>
-                        <p>Status : <strong
-                            style={{color: userInfo.status === 'Active' ? 'green' : 'red'}}>{userInfo.status}</strong>
+                        <p>Type de compte : <Tag
+                            color={userInfo.isSuperAdmin ? 'red' : 'green'}>{userInfo.isSuperAdmin ? 'Admin' : 'Client'}</Tag>
                         </p>
-                        <p>Espace utilisé : 20 GB</p> {/* Affichage de l'espace utilisé */}
+                        <p>Espace utilisé : {filesize(totalFilesSize)}</p> {/* Affichage de l'espace utilisé */}
                     </Col>
                 </Row>
             </Card>
@@ -147,7 +143,7 @@ const ViewFilesJSX = () => {
                 <Col span={8}>
                     <Statistic
                         title="Taille totale des fichiers"
-                        value={filesize(userFiles.reduce((acc, file) => acc + file.size, 0))}
+                        value={filesize(totalFilesSize)}
                     />
                     {/*<h1>{`${userFiles.reduce((acc, file) => acc + file.size, 0)}`}</h1>*/}
                 </Col>
@@ -161,8 +157,8 @@ const ViewFilesJSX = () => {
             <Card style={{marginTop: '20px'}}>
                 <h3>Utilisation de l'espace de stockage</h3>
                 <Progress
-                    percent={determinePercent()}
-                    format={() => `${filesize(userFiles.reduce((acc, file) => acc + file.size, 0))} / ${filesize(userSubscriptions.length * 20000000000)}`}
+                    percent={progressPercent}
+                    format={() => `${filesize(totalFilesSize)} / ${filesize(totalStorage)}`}
                 />
             </Card>
 

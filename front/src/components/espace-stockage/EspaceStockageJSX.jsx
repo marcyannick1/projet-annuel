@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Table, Button, Upload, Popconfirm, Empty, Input, Select, Spin} from 'antd';
+import {Table, Button, Upload, Popconfirm, Empty, Input, Select, Spin, Flex, Progress} from 'antd';
 import {UploadOutlined, DeleteOutlined} from '@ant-design/icons';
 import './EspaceStockageJSX.css';
 import AuthContext from "../../context/authContext.jsx";
@@ -10,6 +10,7 @@ const {Option} = Select;
 export default function EspaceStockage() {
   const {user} = useContext(AuthContext);
   const [files, setFiles] = useState([]);
+  const [userSubscriptions, setUserSubscriptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFormat, setSelectedFormat] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false)
@@ -140,11 +141,24 @@ export default function EspaceStockage() {
       const data = await files.json();
       console.log(data)
 
-      setFiles(data)
+      data.length ? setFiles(data) : null
+    };
+
+    const fetchSubscriptions = async () => {
+      const subscriptions = await fetch(`http://localhost:3000/subscription/${user.id}`)
+      const data = await subscriptions.json();
+      console.log(data)
+
+      data.length ? setUserSubscriptions(data) : null
     };
 
     fetchFiles()
+    fetchSubscriptions()
   }, [user]);
+
+  const totalFilesSize = files.reduce((acc, file) => acc + file.size, 0)
+  const totalStorage = userSubscriptions.length * 20000000000
+    const progressPercent = totalFilesSize * 100 / totalStorage
 
   return (
       <div className="espace-stockage-container contain">
@@ -172,6 +186,8 @@ export default function EspaceStockage() {
           >
             <Button icon={<UploadOutlined/>}>Uploader un fichier</Button>
           </Upload>
+            <Progress percent={progressPercent} size={"small"} style={{width: 300}}
+                      format={() => `${filesize(totalFilesSize)} / ${filesize(totalStorage)}`}/>
         </div>
 
         {uploadLoading && <Spin tip="Upload en cours..." fullscreen />}
