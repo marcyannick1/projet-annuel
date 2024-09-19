@@ -2,7 +2,7 @@ import {useState} from 'react';
 import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
 import {Link, useNavigate} from 'react-router-dom';
-import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
+import {Input, DatePicker, Button, Carousel, Alert, message} from 'antd';
 import {Field, Form, Formik} from "formik";
 import {SignupSchema} from "../../schemas/signupSchema.js";
 import Welcome from "../../svg/register/Welcome.jsx";
@@ -33,9 +33,11 @@ const svgImages = [
 
 const SignJSX = () => {
     const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
     const handleSubmit = async (userData)=>{
         setError(null)
+        setLoading(true)
         try {
             const response = await fetch('http://localhost:3000/register', {
                 method: 'POST',
@@ -44,7 +46,7 @@ const SignJSX = () => {
                 },
                 body: JSON.stringify(userData),
             });
-    
+
             if (response.ok) {
                 const sendEmail = await fetch('http://localhost:3000/email', {
                     method: 'POST',
@@ -57,14 +59,18 @@ const SignJSX = () => {
                         html: await render(<InscriptionEmailJSX userFirstname={userData.firstName}/>)
                     }),
                 });
+
+                sendEmail.ok ? message.success('Votre compte a été créé avec succès. Un email de confirmation a été envoyé.') : null
                 console.log(await sendEmail)
-                navigate("/LoginJSX");
+                setTimeout(() => navigate('/LoginJSX'), 3000);
             } else {
                 const res = await response.json()
                 res.code === "P2002" ? setError("Email déja utilisé") : setError("Une erreur est survenue");
             }
         } catch (error) {
             console.error('Erreur lors de la connexion :', error);
+        }finally {
+            setLoading(false)
         }
     }
 
@@ -152,7 +158,7 @@ const SignJSX = () => {
                                         {errors.confirmPassword && touched.confirmPassword ? errors.confirmPassword : null}
                                     </ErrorMessage>
                                 </div>
-                                <Button type="primary" htmlType="submit">S'inscrire</Button>
+                                <Button loading={loading} type="primary" htmlType="submit">S'inscrire</Button>
                             </Form>
                         )}
                     </Formik>
