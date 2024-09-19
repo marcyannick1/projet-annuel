@@ -124,7 +124,7 @@ const button = {
 
 const anchor = {
   color: "#1890ff",
-  textDecoration: "underline",
+  textDecoration: "undd'emailerline",
 };
 
 const footer = {
