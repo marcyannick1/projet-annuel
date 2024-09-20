@@ -24,6 +24,7 @@ import InscriptionEmailJSX from './components/emails/InscriptionEmailJSX.jsx';
 import SuppressionCompteEmailJSX from './components/emails/SuppressionCompteEmailJSX.jsx';
 import NouveauCompteAdminEmailJSX from './components/emails/NouveauCompteAdminEmailJSX.jsx';
 import SuppressionCompteAdminEmailJSX from './components/emails/SuppressionCompteAdminEmailJSX.jsx';
+import FactureEmailJSX from './components/emails/FactureEmailJSX.jsx';
 
 
 function App() {
@@ -47,7 +48,11 @@ function App() {
                 <Route path="/SuppressionCompteEmailJSX" element={<SuppressionCompteEmailJSX/>}/>
                 <Route path="/SuppressionCompteAdminEmailJSX" element={<SuppressionCompteAdminEmailJSX/>}/>
                 <Route path="/InscriptionEmailJSX" element={<InscriptionEmailJSX/>}/>
+                <Route path="/FactureEmailJSX" element={<FactureEmailJSX/>}/>
+
                 <Route path="/NouveauCompteAdminEmailJSX" element={<NouveauCompteAdminEmailJSX/>}/>
+
+                
 
                 
 
