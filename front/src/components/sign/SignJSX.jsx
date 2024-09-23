@@ -10,6 +10,7 @@ import SignUp from "../../svg/register/SignUp.jsx";
 import Gift from "../../svg/register/Gift.jsx";
 import {render} from "@react-email/render";
 import InscriptionEmailJSX from "../emails/InscriptionEmailJSX.jsx";
+import {sendEmail} from "../../services/emailService.js";
 
 const svgImages = [
     {
@@ -29,13 +30,12 @@ const svgImages = [
     }
 ];
 
-
-
 const SignJSX = () => {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
-    const handleSubmit = async (userData)=>{
+
+    const handleSubmit = async (userData) => {
         setError(null)
         setLoading(true)
         try {
@@ -48,28 +48,19 @@ const SignJSX = () => {
             });
 
             if (response.ok) {
-                const sendEmail = await fetch('http://localhost:3000/email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        to: userData.email,
-                        subject: "Bienvenue!",
-                        html: await render(<InscriptionEmailJSX userFirstname={userData.firstName}/>)
-                    }),
-                });
+                const htmlContent = await render(<InscriptionEmailJSX userFirstname={userData.firstName}/>);
 
-                sendEmail.ok ? message.success('Votre compte a été créé avec succès. Un email de confirmation a été envoyé.') : null
-                console.log(await sendEmail)
-                setTimeout(() => navigate('/LoginJSX'), 3000);
+                const result = await sendEmail(userData.email, "Bienvenue!", htmlContent);
+
+                result.response.includes("OK") ? message.success('Votre compte a été créé avec succès. Un email de confirmation a été envoyé.') : null
+                navigate('/LoginJSX')
             } else {
                 const res = await response.json()
                 res.code === "P2002" ? setError("Email déja utilisé") : setError("Une erreur est survenue");
             }
         } catch (error) {
             console.error('Erreur lors de la connexion :', error);
-        }finally {
+        } finally {
             setLoading(false)
         }
     }
