@@ -19,6 +19,7 @@ import './DashboardJSX.css';
 import logo_ctos from '../../assets/logo_ctos.png';
 
 const DashboardJSX = ({ children }) => {
+  const {user} = useContext(AuthContext);
   const [roleVisible, setRoleVisible] = useState(false);
 
   const toggleRoleVisibility = () => {
@@ -29,11 +30,11 @@ const DashboardJSX = ({ children }) => {
     <div className="dashboard-layout">
       <div className="dashboard-content contain">
         <header className="header">
-        <img src={logo_ctos} alt="logo CTOS" style={{ width: '120px', height: 'auto' }} />
+        <img src={logo_ctos} alt="logo CTOS" style={{ width: '115px', height: '50px' }} />
 
           <div className="user-info">
             <span className="user-name" onClick={toggleRoleVisibility}>
-              <FontAwesomeIcon icon={faCircleUser} /> mouakassarufus@gmail.com
+              <FontAwesomeIcon icon={faCircleUser} /> {user?.email}
               <FontAwesomeIcon icon={roleVisible ? faChevronUp : faChevronDown} className="chevron-icon" />
             </span>
             {roleVisible && <span className="user-role">Admin &amp; Associate</span>}

@@ -12,6 +12,9 @@ import AchatEspaceJSX from './components/achat-espace/AchatEspaceJSX';
 import StatisitiquesJSX from './components/statistiques/StatisitiquesJSX';
 import FacturesJSX from './components/factures/FacturesJSX';
 import ProfilJSX from './components/profil/ProfilJSX';
+import ViewFilesJSX from './components/viewfiles/ViewFilesJSX';
+
+
 
 
 import LoginJSX from './components/login/LoginJSX'
@@ -40,6 +43,7 @@ function App() {
                 <Route path="/UsersJSX" element={<UsersJSX/>}/>
                 <Route path="/AccueilJSX" element={<AccueilJSX/>}/>
                 <Route path="/EspaceStockageJSX" element={<EspaceStockageJSX/>}/>
+                <Route path="/viewFilesJSX/:userId" element={<ViewFilesJSX />} />
                 <Route path="/FacturesJSX" element={<FacturesJSX/>}/>
                 <Route path="/AchatEspaceJSX" element={<AchatEspaceJSX/>}/>
                 <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX/>}/>
