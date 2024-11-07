@@ -64,7 +64,7 @@ const SignJSX = () => {
             setLoading(false)
         }
     }
-  };
+
 
   const ErrorMessage = ({ children }) => {
     return <div style={{ color: 'crimson', fontSize: 12 }}>{children}</div>;
@@ -72,7 +72,6 @@ const SignJSX = () => {
 
   return (
     <>
-      {contextHolder} {/* Affichage des messages */}
       <div className="back">
         <BackgroundJSX />
       </div>
