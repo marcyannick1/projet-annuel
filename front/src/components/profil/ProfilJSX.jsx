@@ -19,11 +19,23 @@ export default function Profil() {
     const formikRef = useRef(null);
     const [modalState, setModalState] = useState({ type: null, visible: false });
 
+    const [userFiles, setUserFiles] = useState([]);
+    
     // Vérifiez l'état de connexion et redirigez si nécessaire
     useEffect(() => {
         if (!user) {
             navigate("/LoginJSX");
         }
+
+        const fetchFiles = async () => {
+            const files = await fetch(`http://localhost:3000/file/${user.id}`)
+            const data = await files.json();
+            console.log(data)
+
+            data.length ? setUserFiles(data) : null
+        };
+
+        fetchFiles()
     }, [user, navigate]);
 
     const showModal = (type) => {
@@ -115,7 +127,7 @@ export default function Profil() {
 
                             <Col xs={24} md={8}>
                                 <Card title="Statistiques du Compte" bordered={false} style={{ borderRadius: '8px' }}>
-                                    <Statistic title="Fichiers Uploadés" value={32} prefix={<FileOutlined style={{ color: '#40a9ff' }} />} valueStyle={{ color: '#40a9ff' }} />
+                                    <Statistic title="Fichiers Uploadés" value={userFiles.length} prefix={<FileOutlined style={{ color: '#40a9ff' }} />} valueStyle={{ color: '#40a9ff' }} />
                                     <Statistic title="Messages Non Lu" value={8} prefix={<MessageOutlined style={{ color: '#13c2c2' }} />} valueStyle={{ color: '#13c2c2' }} style={{ marginTop: '20px' }} />
                                     <Divider />
                                     <p><strong>Compte créé le :</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
