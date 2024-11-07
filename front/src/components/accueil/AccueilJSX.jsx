@@ -7,8 +7,8 @@ import  AuthContext  from '../../context/authContext';
 
 export default function AccueilJSX() {
   
-  const {user} = useContext(AuthContext);
-  console.log(user);
+  const {user, isSuperAdmin} = useContext(AuthContext);
+  console.log(isSuperAdmin);
   return (
     <div className='home-page contain'>
       <h2 className='page-title'>Bienvenue sur le Dashboard</h2>
