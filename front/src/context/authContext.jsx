@@ -7,6 +7,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,19 +18,19 @@ export const AuthProvider = ({ children }) => {
             if (decodedToken.exp * 1000 < Date.now()) {
                 localStorage.removeItem('token');
                 setUser(null);
+                setIsSuperAdmin(false);
             } else {
                 const storedUser = localStorage.getItem('user');
-                if (storedUser) {
-                    setUser(JSON.parse(storedUser));
-                } else {
-                    setUser(decodedToken);
-                }
+                const userData = storedUser ? JSON.parse(storedUser) : decodedToken;
+
+                setUser(userData);
+                setIsSuperAdmin(userData.isSuperAdmin);
             }
         }
     }, []);
 
     const login = async (userData) => {
-        setError(null)
+        setError(null);
         try {
             const response = await fetch('http://localhost:3000/login', {
                 method: 'POST',
@@ -45,6 +46,7 @@ export const AuthProvider = ({ children }) => {
 
                 const decodedUser = jwtDecode(data.token);
                 setUser(decodedUser);
+                setIsSuperAdmin(userData.isSuperAdmin);
                 localStorage.setItem('user', JSON.stringify(decodedUser));
                 navigate("/");
             } else {
@@ -59,16 +61,18 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setUser(null);
+        setIsSuperAdmin(false);
         navigate("/LoginJSX");
     };
 
     const updateUser = (newUser) => {
         setUser(newUser);
+        setIsSuperAdmin(newUser.isSuperAdmin);
         localStorage.setItem('user', JSON.stringify(newUser));
     };
 
     return (
-        <AuthContext.Provider value={{ user, updateUser, login, logout, error }}>
+        <AuthContext.Provider value={{ user, isSuperAdmin, updateUser, login, logout, error }}>
             {children}
         </AuthContext.Provider>
     );

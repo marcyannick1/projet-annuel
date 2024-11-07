@@ -14,6 +14,8 @@ import {faCartShopping, faCircleUser, faHome} from "@fortawesome/free-solid-svg-
 
 
 const SideBar = () => {
+
+    const {user, isSuperAdmin} = useContext(AuthContext);
     // Données du menu
     const items = [
         {
@@ -21,7 +23,7 @@ const SideBar = () => {
             icon: <FontAwesomeIcon icon={faHome} />,
             label: <Link to="/AccueilJSX">Home</Link>,
         },
-        {
+        isSuperAdmin && {
             key: '1',
             icon: <DesktopOutlined />,
             label: <Link to="/UsersJSX">Dashboard</Link>,
