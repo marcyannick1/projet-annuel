@@ -5,6 +5,7 @@ import {DownloadOutlined, SearchOutlined, MinusOutlined, PlusOutlined} from '@an
 import './ViewFilesJSX.css'; // Utilisez le style cohérent avec le reste
 import moment from 'moment';
 import {filesize} from "filesize";
+import user_icon from '../../assets/user_icon.jpg';
 
 const ViewFilesJSX = () => {
     const {userId} = useParams();
@@ -113,26 +114,33 @@ const ViewFilesJSX = () => {
 
             {/* Section des informations personnelles de l'utilisateur */}
             <h2 className="page-title">Espace de stockage de {userInfo.firstName} {userInfo.lastName}</h2>
-            <Card className="user-info-card" style={{marginBottom: '20px'}}>
-                <Row gutter={16}>
-                    <Col span={4}>
-                        <img
-                            src={userInfo.avatar}
-                            alt={userInfo.name}
-                            style={{width: '100%', borderRadius: '50%'}}
-                        />
-                    </Col>
-                    <Col span={20}>
-                        <h3>{userInfo.name}</h3>
-                        <p>Email : {userInfo.email}</p>
-                        <p>Adresse : {userInfo.address}</p>
-                        <p>Type de compte : <Tag
-                            color={userInfo.isSuperAdmin ? 'red' : 'green'}>{userInfo.isSuperAdmin ? 'Admin' : 'Client'}</Tag>
-                        </p>
-                        <p>Espace utilisé : {filesize(totalFilesSize)}</p> {/* Affichage de l'espace utilisé */}
-                    </Col>
-                </Row>
-            </Card>
+           <Card className="user-info-card" style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+    <Row gutter={16} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <Col span={4}>
+            <img
+                src={user_icon}
+                alt={userInfo.name}
+                style={{ width: '245px', height: '245px', borderRadius: '50%', marginRight: '20px' }}
+            />
+        </Col>
+        <Col className='info_user_file' span={20} style={{ paddingLeft: '170px' }}>
+            <h2>{userInfo.firstName} {userInfo.lastName}</h2>
+            <p>Email : {userInfo.email}</p>
+            <p>Adresse : {userInfo.address}</p>
+            <p>Née le : {moment(userInfo.birthday).format('DD MMMM YYYY')} (Âge : {moment().diff(moment(userInfo.birthday), 'years')} ans)</p>
+            <p>Type de compte : 
+                <Tag color={userInfo.isSuperAdmin ? 'red' : 'green'}>
+                    {userInfo.isSuperAdmin ? 'Admin' : 'Client'}
+                </Tag>
+            </p>
+            <p>Espace utilisé : {filesize(totalFilesSize)}</p> {/* Affichage de l'espace utilisé */}
+            <p>Compte créé le : <strong>{moment(userInfo.createdAt).format('DD MMMM YYYY à HH:mm')}</strong></p>
+
+            {/* moment(userInfo.createdAt).format('DD MMMM YYYY à HH:mm') : Cette syntaxe formate la date pour qu’elle apparaisse comme 17 septembre 2024 à 10:55. */}
+        </Col>
+    </Row>
+</Card>
+
 
             {/* Section des statistiques */
             }

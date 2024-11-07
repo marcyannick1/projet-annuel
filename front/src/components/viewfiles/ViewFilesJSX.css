@@ -16,4 +16,7 @@
     max-height: 400px; /* Ajustez la hauteur maximale selon vos besoins */
     overflow-y: auto;
   }
-  
+.info_user_file{
+  /* padding-left: 150px; */
+  /* background-color: red; */
+}

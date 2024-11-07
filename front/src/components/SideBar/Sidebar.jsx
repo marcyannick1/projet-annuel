@@ -14,8 +14,8 @@ import {faCartShopping, faCircleUser, faHome} from "@fortawesome/free-solid-svg-
 
 
 const SideBar = () => {
+    const { isSuperAdmin } = useContext(AuthContext); // Récupère l'état admin de l'utilisateur
 
-    const {user, isSuperAdmin} = useContext(AuthContext);
     // Données du menu
     const items = [
         {
@@ -23,6 +23,7 @@ const SideBar = () => {
             icon: <FontAwesomeIcon icon={faHome} />,
             label: <Link to="/AccueilJSX">Home</Link>,
         },
+        // Conditionner l'affichage de l'élément "Dashboard"
         isSuperAdmin && {
             key: '1',
             icon: <DesktopOutlined />,
@@ -85,7 +86,8 @@ const SideBar = () => {
             label: 'Logout',
             style: { position: 'absolute', bottom: 0, width: '100%' }
         },
-    ];
+    ].filter(Boolean); // Filtre les éléments undefined
+
     const { logout } = useContext(AuthContext); // Utilisation du contexte d'authentification
 
     const [collapsed, setCollapsed] = useState(false);
@@ -100,6 +102,7 @@ const SideBar = () => {
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
     };
+
     return (
         <aside className="sidebar">
             <div>
