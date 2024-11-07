@@ -22,7 +22,8 @@ const deleteUser = async(req, res) => {
 
     try {
         const user = await prisma.user.delete({
-            where: {id: parseInt(id)}
+            where: {id: parseInt(id)},
+            include: {File: true}
         })
 
         res.status(200).json(user)
@@ -32,7 +33,22 @@ const deleteUser = async(req, res) => {
     }
 }
 
+const getAdminUsers = async (req, res) => {
+    try {
+        const admins = await prisma.user.findMany({
+            where: {
+                isSuperAdmin: true
+            }
+        })
+        admins.length ? res.status(200).json(admins) : res.status(404).json({message: 'Aucun utilisateurs trouvés'})
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: 'Erreur lors de la recuperation'});
+    }
+}
+
 module.exports={
     editUser,
-    deleteUser
+    deleteUser,
+    getAdminUsers
 }
