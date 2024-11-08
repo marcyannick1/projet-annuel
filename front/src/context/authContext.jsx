@@ -8,25 +8,33 @@ export const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); // Nouvel état de chargement
     const navigate = useNavigate();
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-            const decodedToken = jwtDecode(storedToken);
+            try {
+                const decodedToken = jwtDecode(storedToken);
 
-            if (decodedToken.exp * 1000 < Date.now()) {
+                if (decodedToken.exp * 1000 < Date.now()) {
+                    localStorage.removeItem('token');
+                    setUser(null);
+                    setIsSuperAdmin(false);
+                } else {
+                    const storedUser = localStorage.getItem('user');
+                    const userData = storedUser ? JSON.parse(storedUser) : decodedToken;
+
+                    setUser(userData);
+                    setIsSuperAdmin(userData.isSuperAdmin);
+                }
+            } catch (error) {
+                console.error("Erreur lors du décodage du token :", error);
                 localStorage.removeItem('token');
                 setUser(null);
-                setIsSuperAdmin(false);
-            } else {
-                const storedUser = localStorage.getItem('user');
-                const userData = storedUser ? JSON.parse(storedUser) : decodedToken;
-
-                setUser(userData);
-                setIsSuperAdmin(userData.isSuperAdmin);
             }
         }
+        setIsLoading(false); // Fin du chargement après vérification
     }, []);
 
     const login = async (userData) => {
@@ -72,7 +80,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, isSuperAdmin, updateUser, login, logout, error }}>
+        <AuthContext.Provider value={{ user, isSuperAdmin, updateUser, login, logout, error, isLoading }}>
             {children}
         </AuthContext.Provider>
     );

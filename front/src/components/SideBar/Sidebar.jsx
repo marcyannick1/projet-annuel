@@ -29,7 +29,7 @@ const SideBar = () => {
             icon: <DesktopOutlined />,
             label: <Link to="/UsersJSX">Dashboard</Link>,
         },
-        {
+        isSuperAdmin && {
             key: '3',
             icon: <PieChartOutlined />,
             label: <Link to="/StatisitiquesJSX">Statistiques</Link>,

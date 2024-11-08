@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import {useContext, useState} from 'react';
 import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, Navigate, useNavigate} from 'react-router-dom';
 import {Input, DatePicker, Button, Carousel, Alert, message} from 'antd';
 import {Field, Form, Formik} from "formik";
 import {SignupSchema} from "../../schemas/signupSchema.js";
@@ -11,6 +11,7 @@ import Gift from "../../svg/register/Gift.jsx";
 import {render} from "@react-email/render";
 import InscriptionEmailJSX from "../emails/InscriptionEmailJSX.jsx";
 import {sendEmail} from "../../services/emailService.js";
+import AuthContext from "../../context/authContext.jsx";
 
 const svgImages = [
     {
@@ -31,10 +32,14 @@ const svgImages = [
 ];
 
 const SignJSX = () => {
+    const {user} = useContext(AuthContext)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
+    // if (user) {
+    //     return <Navigate to="/"/>;
+    // }
     const handleSubmit = async (userData) => {
         setError(null)
         setLoading(true)
@@ -66,42 +71,44 @@ const SignJSX = () => {
     }
 
 
-  const ErrorMessage = ({ children }) => {
-    return <div style={{ color: 'crimson', fontSize: 12 }}>{children}</div>;
-  };
+    const ErrorMessage = ({children}) => {
+        return <div style={{color: 'crimson', fontSize: 12}}>{children}</div>;
+    };
 
-  return (
-    <>
-      <div className="back">
-        <BackgroundJSX />
-      </div>
-      <div className="conte">
-        <div className="form-container">
-          <h2>S'inscrire</h2>
-          <Formik
-            initialValues={{
-              firstName: '',
-              lastName: '',
-              birthday: null,
-              address: '',
-              email: '',
-              password: '',
-              confirmPassword: '',
-            }}
-            validationSchema={SignupSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ setFieldValue, errors, touched }) => (
-              <Form className="login-form">
-                <div>
-                  <label htmlFor="firstName">Prénom</label>
-                  <Field name="firstName" as={Input} id="firstName" status={errors.firstName && touched.firstName ? 'error' : null} />
-                </div>
+    return (
+        <>
+            <div className="back">
+                <BackgroundJSX/>
+            </div>
+            <div className="conte">
+                <div className="form-container">
+                    <h2>S'inscrire</h2>
+                    <Formik
+                        initialValues={{
+                            firstName: '',
+                            lastName: '',
+                            birthday: null,
+                            address: '',
+                            email: '',
+                            password: '',
+                            confirmPassword: '',
+                        }}
+                        validationSchema={SignupSchema}
+                        onSubmit={handleSubmit}
+                    >
+                        {({setFieldValue, errors, touched}) => (
+                            <Form className="login-form">
+                                <div>
+                                    <label htmlFor="firstName">Prénom</label>
+                                    <Field name="firstName" as={Input} id="firstName"
+                                           status={errors.firstName && touched.firstName ? 'error' : null}/>
+                                </div>
 
-                <div>
-                  <label htmlFor="lastName">Nom</label>
-                  <Field name="lastName" as={Input} id="lastName" status={errors.lastName && touched.lastName ? 'error' : null} />
-                </div>
+                                <div>
+                                    <label htmlFor="lastName">Nom</label>
+                                    <Field name="lastName" as={Input} id="lastName"
+                                           status={errors.lastName && touched.lastName ? 'error' : null}/>
+                                </div>
 
                                 <div>
                                     <label htmlFor="birthday">Date de naissance</label>

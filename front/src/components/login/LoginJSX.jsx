@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import './LoginJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
-import {Link} from 'react-router-dom';
+import {Link, Navigate} from 'react-router-dom';
 import {Input, Button, Carousel, Alert} from 'antd';
 import AuthContext from "../../context/authContext.jsx";
 import {Field, Form, Formik} from "formik";
@@ -29,7 +29,11 @@ const svgImages = [
 ];
 
 const SignJSX = () => {
-    const {login, error} = useContext(AuthContext)
+    const {user, login, error} = useContext(AuthContext)
+
+    if (user) {
+        return <Navigate to="/" />;
+    }
 
     const ErrorMessage = ({children}) => {
         return (
