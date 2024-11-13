@@ -43,9 +43,24 @@ const SubscriptionJSX = () => {
 
   return (
     <div className="subscription-page">
+      {/* Message en dehors de la card */}
+      <Typography.Paragraph 
+        style={{ 
+          color: '#000', 
+          fontSize: '38px', 
+          textAlign: 'center', 
+          marginTop: '30px', 
+          fontWeight: 'bold',
+          width: '750px'
+        }}
+      >
+        Un abonnement est nécessaire pour profiter pleinement de l'application. Achetez-le maintenant !
+      </Typography.Paragraph>
+
       <div className="left-side">
         <img src={subscriptionImage} alt="Subscription" className="subscription-image" />
       </div>
+      
       <div className="right-side">
         <Card
           bordered={false}
