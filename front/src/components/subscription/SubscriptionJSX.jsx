@@ -7,7 +7,7 @@ import AuthContext from '../../context/authContext';
 import './SubscriptionJSX.css';
 
 // Importer le logo de l'entreprise
-import companyLogo from '../../assets/logo_ctos.png';
+import companyLogo from '../../assets/logo2.png';
 import subscriptionImage from '../../assets/image_gif.png';
 
 const { Title, Paragraph } = Typography;
@@ -44,24 +44,40 @@ const SubscriptionJSX = () => {
   return (
     <div className="subscription-page">
       {/* Message en dehors de la card */}
-      <Typography.Paragraph 
-        style={{ 
-          color: '#000', 
-          fontSize: '38px', 
-          textAlign: 'center', 
-          marginTop: '30px', 
-          fontWeight: 'bold',
-          width: '750px'
-        }}
-      >
-        Un abonnement est nécessaire pour profiter pleinement de l'application. Achetez-le maintenant !
-      </Typography.Paragraph>
-
+      <img src={companyLogo} alt="Company Logo" className="company-logo2" />
+     
       <div className="left-side">
         <img src={subscriptionImage} alt="Subscription" className="subscription-image" />
       </div>
       
       <div className="right-side">
+        <Typography.Paragraph 
+          style={{ 
+            color: '#000', 
+            fontSize: '26px', 
+            textAlign: 'center', 
+            marginTop: '30px', 
+            fontWeight: 'bold',
+            width: '650px'
+          }}
+        >
+          <i className="fa-solid fa-circle-user" style={{ marginRight: '10px' }}></i>
+          Bonjour <span style={{ color: '#1890ff' }}>@{user?.firstName || 'utilisateur'}</span>.
+        </Typography.Paragraph>
+        
+        <Typography.Paragraph 
+          style={{ 
+            color: '#000', 
+            fontSize: '36px', 
+            textAlign: 'center', 
+            marginTop: '30px', 
+            fontWeight: 'bold',
+            width: '650px'
+          }}
+        >
+          Un abonnement est nécessaire pour profiter pleinement de l'application. <span className='achetez-le-maintenant'> {<FontAwesomeIcon icon={faCartShopping} />} Achetez-le maintenant !</span>
+        </Typography.Paragraph>
+        
         <Card
           bordered={false}
           style={{
@@ -101,7 +117,6 @@ const SubscriptionJSX = () => {
             style={{
               backgroundColor: '#1890ff',
               borderColor: '#1890ff',
-              borderRadius: '30px',
               padding: '10px 20px',
               fontSize: '16px',
               width: '100%',
