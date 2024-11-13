@@ -7,8 +7,8 @@ import AuthContext from '../../context/authContext';
 import './SubscriptionJSX.css';
 
 // Importer le logo de l'entreprise
-import companyLogo from '../../assets/logo_ctos.png'; // Assurez-vous d'avoir ce fichier
-import subscriptionImage from '../../assets/image_gif.png'; // Assurez-vous d'avoir ce fichier
+import companyLogo from '../../assets/logo_ctos.png';
+import subscriptionImage from '../../assets/image_gif.png';
 
 const { Title, Paragraph } = Typography;
 
@@ -33,7 +33,6 @@ const SubscriptionJSX = () => {
       console.log(result);
       message.success('Achat effectué avec succès! Retrouvez votre facture dans "Mes Factures".');
       
-      // Naviguer vers la page d'accueil avec un rafraîchissement
       navigate('/AccueilJSX');
     } catch (error) {
       message.error('Une erreur est survenue lors de l\'achat.');
@@ -51,17 +50,18 @@ const SubscriptionJSX = () => {
         <Card
           bordered={false}
           style={{
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-            borderRadius: '12px',
-            padding: '20px',
+            boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
+            borderRadius: '15px',
+            padding: '30px',
             textAlign: 'center',
             width: '100%',
             maxWidth: '400px',
-            position: 'relative'
+            position: 'relative',
+            backgroundColor: '#f9f9f9',
           }}
         >
           <img src={companyLogo} alt="Company Logo" className="company-logo" />
-          <Title level={4} style={{ marginTop: '10px' }}>Achat Abonnement 20Gb</Title>
+          <Title level={4} style={{ marginTop: '15px', color: '#1890ff' }}>Achat Abonnement 20Gb</Title>
           <Divider />
           <div className="invoice-details">
             <Paragraph>
@@ -83,7 +83,17 @@ const SubscriptionJSX = () => {
             icon={<FontAwesomeIcon icon={faCartShopping} />}
             loading={loading}
             onClick={handlePurchase}
-            style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
+            style={{
+              backgroundColor: '#1890ff',
+              borderColor: '#1890ff',
+              borderRadius: '30px',
+              padding: '10px 20px',
+              fontSize: '16px',
+              width: '100%',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#40a9ff'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#1890ff'}
           >
             Acheter Maintenant
           </Button>
