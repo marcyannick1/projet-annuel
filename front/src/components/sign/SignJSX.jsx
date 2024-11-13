@@ -1,11 +1,11 @@
-import {useContext, useState} from 'react';
+import { useContext, useState } from 'react';
 import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
-import {Link, useNavigate} from 'react-router-dom';
-import {Input, DatePicker, Button, Carousel, Alert} from 'antd';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { Input, DatePicker, Button, Carousel, Alert, message } from 'antd';
 import AuthContext from "../../context/authContext.jsx";
-import {Field, Form, Formik} from "formik";
-import {SignupSchema} from "../../schemas/signupSchema.js";
+import { Field, Form, Formik } from "formik";
+import { SignupSchema } from "../../schemas/signupSchema.js";
 import Welcome from "../../svg/register/Welcome.jsx";
 import SignUp from "../../svg/register/SignUp.jsx";
 import Gift from "../../svg/register/Gift.jsx";
@@ -13,28 +13,38 @@ import Gift from "../../svg/register/Gift.jsx";
 const svgImages = [
     {
         svg: <Welcome height={200}/>,
-        label: "Rejoignez notre communauté ",
+        label: "Rejoignez notre communauté",
         text: "Créez un compte pour découvrir des contenus exclusifs et rejoindre une communauté dynamique."
     },
     {
         svg: <SignUp height={200}/>,
         label: "Inscription facile et rapide",
-        text: " En quelques étapes simples, complétez votre inscription et accédez à toutes nos fonctionnalités."
+        text: "En quelques étapes simples, complétez votre inscription et accédez à toutes nos fonctionnalités."
     },
     {
         svg: <Gift height={200}/>,
-        label: "Bénéficiez d'avantages uniques ",
-        text: " Profitez d'offres spéciales, de recommandations personnalisées et d'une expérience sur mesure."
+        label: "Bénéficiez d'avantages uniques",
+        text: "Profitez d'offres spéciales, de recommandations personnalisées et d'une expérience sur mesure."
     }
 ];
 
-
-
 const SignJSX = () => {
-    const [error, setError] = useState(null)
+    const [error, setError] = useState(null);
+    const { isLoading, user } = useContext(AuthContext);
     const navigate = useNavigate();
-    const handleSubmit = async (userData)=>{
-        setError(null)
+
+    // Affiche un message de chargement pendant la vérification de l'authentification
+    if (isLoading) {
+        return <div>Chargement...</div>;
+    }
+
+    // Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil
+    if (user) {
+        return <Navigate to="/" />;
+    }
+
+    const handleSubmit = async (userData) => {
+        setError(null);
         try {
             const response = await fetch('http://localhost:3000/register', {
                 method: 'POST',
@@ -45,26 +55,32 @@ const SignJSX = () => {
             });
     
             if (response.ok) {
-                navigate("/LoginJSX");
+                message.success({
+                    content: 'Compte créé avec succès ! 🎉🎊 Redirection en cours...',
+                    duration: 2,
+                });
+                setTimeout(() => {
+                    navigate("/LoginJSX");
+                }, 2000); // Attendre 2 secondes avant la redirection
             } else {
-                const res = await response.json()
-                res.code === "P2002" ? setError("Email déja utilisé") : setError("Une erreur est survenue");
+                const res = await response.json();
+                res.code === "P2002" ? setError("Email déjà utilisé") : setError("Une erreur est survenue");
             }
         } catch (error) {
             console.error('Erreur lors de la connexion :', error);
         }
-    }
+    };
 
-    const ErrorMessage = ({children}) => {
+    const ErrorMessage = ({ children }) => {
         return (
-            <div style={{color: "crimson", fontSize: 12}}>{children}</div>
-        )
-    }
+            <div style={{ color: "crimson", fontSize: 12 }}>{children}</div>
+        );
+    };
 
     return (
         <>
             <div className="back">
-                <BackgroundJSX/>
+                <BackgroundJSX />
             </div>
             <div className="conte">
                 <div className="form-container">
@@ -82,7 +98,7 @@ const SignJSX = () => {
                         validationSchema={SignupSchema}
                         onSubmit={handleSubmit}
                     >
-                        {({setFieldValue, errors, touched}) => (
+                        {({ setFieldValue, errors, touched }) => (
                             <Form className="login-form">
                                 <div>
                                     <label htmlFor="firstName">Prénom</label>
@@ -101,7 +117,7 @@ const SignJSX = () => {
                                     <DatePicker
                                         format="DD/MM/YYYY"
                                         onChange={(date) => setFieldValue('birthday', date ? date.toDate().toISOString() : null)}
-                                        style={{width: "100%"}}
+                                        style={{ width: "100%" }}
                                         status={errors.birthday && touched.birthday ? "error" : null}
                                         placeholder="Sélectionner une date"
                                     />
