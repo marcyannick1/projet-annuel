@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Table, Button, Upload, Popconfirm, Empty, Input, Select, Spin, Progress } from 'antd';
-import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import React, {useState, useEffect, useContext} from 'react';
+import {Table, Button, Upload, Popconfirm, Empty, Input, Select, Spin, Flex, Progress} from 'antd';
+import {UploadOutlined, DeleteOutlined} from '@ant-design/icons';
 import './EspaceStockageJSX.css';
 import AuthContext from "../../context/authContext.jsx";
 import { filesize } from "filesize";
@@ -11,6 +11,7 @@ const MAX_STORAGE = 20 * 1024 * 1024 * 1024; // 20GB en octets
 export default function EspaceStockage() {
   const { user } = useContext(AuthContext);
   const [files, setFiles] = useState([]);
+  const [userSubscriptions, setUserSubscriptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFormat, setSelectedFormat] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -143,61 +144,54 @@ export default function EspaceStockage() {
       const data = await files.json();
       console.log(data);
 
-      const filteredFiles = data.map((file) => ({
-        id: file.id,
-        name: file.name,
-        size: file.size,
-        createdAt: file.createdAt,
-        format: file.format,
-        url: file.url,
-      }));
-
-      setFiles(filteredFiles);
+      data.length ? setFiles(data) : null
     };
 
-    fetchFiles();
+    const fetchSubscriptions = async () => {
+      const subscriptions = await fetch(`http://localhost:3000/subscription/${user.id}`)
+      const data = await subscriptions.json();
+      console.log(data)
+
+      data.length ? setUserSubscriptions(data) : null
+    };
+
+    fetchFiles()
+    fetchSubscriptions()
   }, [user]);
 
+  const totalFilesSize = files.reduce((acc, file) => acc + file.size, 0)
+  const totalStorage = userSubscriptions.length * 20000000000
+    const progressPercent = totalFilesSize * 100 / totalStorage
+
   return (
-    <div className="espace-stockage-container contain">
-      <h2>Espace de Stockage</h2>
-
-      {/* Affichage de la barre de progression */}
-      <div style={{ marginBottom: 16 }}>
-        <Progress
-          type="circle"
-          percent={Math.min(usedPercentage, 100).toFixed(2)}
-          status={usedPercentage >= 100 ? 'exception' : 'normal'}
-          format={() => `${(totalFileSize / (1024 * 1024 * 1024)).toFixed(2)} / 20 Go`}
-        />
-      </div>
-
-      <div style={{ display: "flex", gap: 10 }}>
-        <Input
-          placeholder="Rechercher par nom de fichier"
-          onChange={handleSearch}
-          style={{ marginBottom: 16, width: 200 }}
-        />
-        <Select
-          placeholder="Filtrer par format"
-          onChange={handleFormatChange}
-          style={{ marginBottom: 16, width: 200 }}
-        >
-          <Option value={null}>Tous les formats</Option>
-          {filesFormats.map((format, idx) => (
-            <Option key={idx} value={format}>
-              {format}
-            </Option>
-          ))}
-        </Select>
-        <Upload
-          customRequest={handleUpload}
-          showUploadList={false}
-          multiple
-        >
-          <Button icon={<UploadOutlined />}>Uploader un fichier</Button>
-        </Upload>
-      </div>
+      <div className="espace-stockage-container contain">
+        <h2>Espace de Stockage</h2>
+        <div style={{display: "flex", gap: 10}}>
+          <Input
+              placeholder="Rechercher par nom de fichier"
+              onChange={handleSearch}
+              style={{marginBottom: 16, width: 200}}
+          />
+          <Select
+              placeholder="Filtrer par format"
+              onChange={handleFormatChange}
+              style={{marginBottom: 16, width: 200}}
+          >
+            <Option value={null}>Tous les formats</Option>
+            {filesFormats.map((format, idx) => (
+                <Option key={idx} value={format}>{format}</Option>
+            ))}
+          </Select>
+          <Upload
+              customRequest={handleUpload}
+              showUploadList={false}
+              multiple
+          >
+            <Button icon={<UploadOutlined/>}>Uploader un fichier</Button>
+          </Upload>
+            <Progress percent={progressPercent} size={"small"} style={{width: 300}}
+                      format={() => `${filesize(totalFilesSize)} / ${filesize(totalStorage)}`}/>
+        </div>
 
       {uploadLoading && <Spin tip="Upload en cours..." fullscreen />}
 

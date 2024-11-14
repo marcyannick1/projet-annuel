@@ -1,14 +1,17 @@
 import { useContext, useState } from 'react';
 import './SignJSX.css';
 import BackgroundJSX from '../background/BackgroundJSX';
-import { Link, useNavigate, Navigate } from 'react-router-dom';
-import { Input, DatePicker, Button, Carousel, Alert, message } from 'antd';
-import AuthContext from "../../context/authContext.jsx";
-import { Field, Form, Formik } from "formik";
-import { SignupSchema } from "../../schemas/signupSchema.js";
+import {Link, Navigate, useNavigate} from 'react-router-dom';
+import {Input, DatePicker, Button, Carousel, Alert, message} from 'antd';
+import {Field, Form, Formik} from "formik";
+import {SignupSchema} from "../../schemas/signupSchema.js";
 import Welcome from "../../svg/register/Welcome.jsx";
 import SignUp from "../../svg/register/SignUp.jsx";
 import Gift from "../../svg/register/Gift.jsx";
+import {render} from "@react-email/render";
+import InscriptionEmailJSX from "../emails/InscriptionEmailJSX.jsx";
+import {sendEmail} from "../../services/emailService.js";
+import AuthContext from "../../context/authContext.jsx";
 
 const svgImages = [
     {
@@ -53,23 +56,25 @@ const SignJSX = () => {
                 },
                 body: JSON.stringify(userData),
             });
-    
+
             if (response.ok) {
-                message.success({
-                    content: 'Compte créé avec succès ! 🎉🎊 Redirection en cours...',
-                    duration: 2,
-                });
-                setTimeout(() => {
-                    navigate("/LoginJSX");
-                }, 2000); // Attendre 2 secondes avant la redirection
+                const htmlContent = await render(<InscriptionEmailJSX userFirstname={userData.firstName}/>);
+
+                const result = await sendEmail(userData.email, "Bienvenue!", htmlContent);
+
+                result.response.includes("OK") ? message.success('Votre compte a été créé avec succès. Un email de confirmation a été envoyé.') : null
+                navigate('/LoginJSX')
             } else {
                 const res = await response.json();
                 res.code === "P2002" ? setError("Email déjà utilisé") : setError("Une erreur est survenue");
             }
         } catch (error) {
             console.error('Erreur lors de la connexion :', error);
+        } finally {
+            setLoading(false)
         }
     };
+
 
     const ErrorMessage = ({ children }) => {
         return (
@@ -103,13 +108,13 @@ const SignJSX = () => {
                                 <div>
                                     <label htmlFor="firstName">Prénom</label>
                                     <Field name="firstName" as={Input} id="firstName"
-                                           status={errors.firstName && touched.firstName ? "error" : null}/>
+                                           status={errors.firstName && touched.firstName ? 'error' : null}/>
                                 </div>
 
                                 <div>
                                     <label htmlFor="lastName">Nom</label>
                                     <Field name="lastName" as={Input} id="lastName"
-                                           status={errors.lastName && touched.lastName ? "error" : null}/>
+                                           status={errors.lastName && touched.lastName ? 'error' : null}/>
                                 </div>
 
                                 <div>
@@ -155,7 +160,8 @@ const SignJSX = () => {
                                         {errors.confirmPassword && touched.confirmPassword ? errors.confirmPassword : null}
                                     </ErrorMessage>
                                 </div>
-                                <Button type="primary" htmlType="submit">S'inscrire</Button>
+                                <Button loading={isLoading} type="primary" htmlType="submit">S'inscrire</Button>
+
                             </Form>
                         )}
                     </Formik>

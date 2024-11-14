@@ -8,10 +8,9 @@ import './DashboardJSX.css';
 import logo_ctos from '../../assets/logo_ctos.png';
 
 const DashboardJSX = ({ children }) => {
-  const { user, updateUser, logout } = useContext(AuthContext); // Obtenez l'utilisateur depuis le contexte Auth
-  const navigate = useNavigate();
+  const {user} = useContext(AuthContext);
   const [roleVisible, setRoleVisible] = useState(false);
-
+  const navigate = useNavigate(); 
   // Vérifiez l'état de connexion et redirigez si nécessaire
   useEffect(() => {
     if (!user) {
@@ -38,10 +37,11 @@ const DashboardJSX = ({ children }) => {
     <div className="dashboard-layout">
       <div className="dashboard-content contain">
         <header className="header">
-          <img src={logo_ctos} alt="logo CTOS" style={{ width: '120px', height: '48px' }} />
+        <img src={logo_ctos} alt="logo CTOS" style={{ width: '115px', height: '45px' }} />
+
           <div className="user-info">
             <span className="user-name" onClick={toggleRoleVisibility}>
-              <FontAwesomeIcon icon={faCircleUser} /> {user.email}
+              <FontAwesomeIcon icon={faCircleUser} /> {user?.email}
               <FontAwesomeIcon icon={roleVisible ? faChevronUp : faChevronDown} className="chevron-icon" />
             </span>
             {roleVisible && (

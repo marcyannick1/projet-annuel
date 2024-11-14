@@ -59,7 +59,7 @@ const Factures = () => {
                     }
                     fileName={`facture ${new Date(record.createdAt).toLocaleDateString()}.pdf`}
                 >
-                    <Button icon={<DownloadOutlined/>} type="primary">
+                    <Button className='télecharger' icon={<DownloadOutlined/>} type="primary"> 
                         Télecharger
                     </Button>
                 </PDFDownloadLink>

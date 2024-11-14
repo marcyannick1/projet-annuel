@@ -52,7 +52,7 @@
   width: 100%;
 }
 
-.ant-btn-primary {
+.ant-btn-primarys {
   background-color: #1890ff;
   border-color: #1890ff;
   border-radius: none;
@@ -70,4 +70,65 @@
   padding: 10px 20px;
   color: white;
   border-radius: 30px;
+}
+
+
+
+/* Styles des icônes flottantes */
+.floating-icon {
+  position: absolute;
+  font-size: 60px;
+  color: #1890ff;
+  opacity: 0.7;
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Positionnement spécifique de chaque icône */
+.icon-databases {
+  top: 42%;
+  left: 75%;
+  animation-delay: 0s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 25px 25px;
+  border-radius: 100%;
+}
+
+.icon-clouds {
+  top: 50%;
+  right: 14%;
+  animation-delay: 1.5s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 35px 25px;
+  border-radius: 100%;
+}
+
+.icon-folders {
+  bottom: 25%;
+  left: 82%;
+  animation-delay: 3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 35px 25px;
+  border-radius: 100%;
+}
+.icon-sack-dollars{
+  bottom: 15%;
+  left: 75%;
+  animation-delay: 3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 35px 25px;
+  border-radius: 100%;
+}
+
+/* Animation de flottement */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }

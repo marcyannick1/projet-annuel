@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Button, Card, message, Typography, Divider } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom'; 
 import AuthContext from '../../context/authContext';
 import './SubscriptionJSX.css';
+import { faCartShopping, faDatabase, faCloudArrowDown, faFolderOpen, faSackDollar } from '@fortawesome/free-solid-svg-icons';
+
 
 // Importer le logo de l'entreprise
 import companyLogo from '../../assets/logo2.png';
@@ -45,6 +46,11 @@ const SubscriptionJSX = () => {
     <div className="subscription-page">
       {/* Message en dehors de la card */}
       <img src={companyLogo} alt="Company Logo" className="company-logo2" />
+        {/* Icônes flottantes */}
+        <FontAwesomeIcon icon={faDatabase} className="floating-icon icon-databases" />
+      <FontAwesomeIcon icon={faCloudArrowDown} className="floating-icon icon-clouds" />
+      <FontAwesomeIcon icon={faFolderOpen} className="floating-icon icon-folders" />
+      <FontAwesomeIcon icon={faSackDollar} className="floating-icon icon-sack-dollars" /> {/* Nouvelle icône ajoutée */}
      
       <div className="left-side">
         <img src={subscriptionImage} alt="Subscription" className="subscription-image" />
@@ -111,6 +117,7 @@ const SubscriptionJSX = () => {
           <Divider />
           <Button
             type="primary"
+            className='ant-btn-primarys '
             icon={<FontAwesomeIcon icon={faCartShopping} />}
             loading={loading}
             onClick={handlePurchase}

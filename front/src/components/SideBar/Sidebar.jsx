@@ -16,34 +16,22 @@ import { Link } from "react-router-dom";
 import { faCartShopping, faCircleUser, faHome } from "@fortawesome/free-solid-svg-icons";
 
 const SideBar = () => {
-    const { user, logout } = useContext(AuthContext); // Utilisation du contexte d'authentification
-    const [isSubscribed, setIsSubscribed] = useState(false); // État pour vérifier l'abonnement
-    const [collapsed, setCollapsed] = useState(false);
+    const { isSuperAdmin } = useContext(AuthContext); // Récupère l'état admin de l'utilisateur
 
-    const handleMenuClick = ({ key }) => {
-        if (key === 'logout') {
-            // Appel à la fonction de déconnexion
-            logout();
-        }
-    };
-
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed);
-    };
-
-    // Les éléments du menu
+    // Données du menu
     const items = [
         {
             key: 'home',
             icon: <FontAwesomeIcon icon={faHome} />,
             label: <Link to="/AccueilJSX">Home</Link>,
         },
-        {
+        // Conditionner l'affichage de l'élément "Dashboard"
+        isSuperAdmin && {
             key: '1',
             icon: <DesktopOutlined />,
             label: <Link to="/UsersJSX">Dashboard</Link>,
         },
-        {
+        isSuperAdmin && {
             key: '3',
             icon: <PieChartOutlined />,
             label: <Link to="/StatisitiquesJSX">Statistiques</Link>,
@@ -58,10 +46,24 @@ const SideBar = () => {
             label: 'Messages',
             icon: <MailOutlined />,
             children: [
-                { key: '5', label: 'Nouveaux Utilisateurs' },
-                { key: '6', label: 'Création de nouveau compte' },
-                { key: '7', label: 'Compte supprimé' },
-                { key: '8', label: 'Changez votre mot de passe' },
+                {
+                    key: '5',
+                    label: <Link to="/InscriptionEmailJSX">Nouveaux Utilisateurs</Link>,
+
+                },
+                {
+                    key: '6',
+                    label: <Link to="/NouveauCompteAdminEmailJSX">Création de nouveau compte</Link>,
+                },
+                {
+                    key: '7',
+                    label: <Link to="/SuppressionCompteEmailJSX">Compte supprimé</Link>,
+                },
+                {
+                    key: '8',
+                    label: <Link to="/SuppressionCompteAdminEmailJSX">Compte supprimé Admin</Link>,
+
+                },
             ],
         },
         {
@@ -86,9 +88,23 @@ const SideBar = () => {
             label: 'Logout',
             style: { position: 'absolute', bottom: 0, width: '100%' }
         },
-    ];
+    ].filter(Boolean); // Filtre les éléments undefined
 
-    // Affiche la barre de menu uniquement si l'utilisateur a un abonnement
+    const { logout } = useContext(AuthContext); // Utilisation du contexte d'authentification
+
+    const [collapsed, setCollapsed] = useState(false);
+
+    const handleMenuClick = ({ key }) => {
+        if (key === 'logout') {
+            // Appel à la fonction de déconnexion
+            logout();
+        }
+    };
+
+    const toggleCollapsed = () => {
+        setCollapsed(!collapsed);
+    };
+
     return (
         <aside className="sidebar">
             <div>

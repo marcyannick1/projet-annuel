@@ -1,5 +1,6 @@
 .achat-espace {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -13,3 +14,67 @@
     border-radius: 8px;
     padding: 20px;
   }
+
+
+/* Styles des icônes flottantes */
+.floating-icon {
+  position: absolute;
+  font-size: 60px;
+  color: #1890ff;
+  opacity: 0.7;
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Positionnement spécifique de chaque icône */
+.icon-database {
+  top: 35%;
+  left: 35%;
+  animation-delay: 0s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 25px 25px;
+  border-radius: 100%;
+
+
+
+
+}
+
+.icon-cloud {
+  top: 30%;
+  right: 34%;
+  animation-delay: 1.5s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 35px 25px;
+  border-radius: 100%;
+}
+
+.icon-folder {
+  bottom: 34%;
+  left: 40%;
+  animation-delay: 3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 35px 25px;
+  border-radius: 100%;
+}
+.icon-sack-dollar{
+  bottom: 40%;
+  left: 60%;
+  animation-delay: 3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 35px 25px;
+  border-radius: 100%;
+}
+
+/* Animation de flottement */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
