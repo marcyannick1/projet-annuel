@@ -35,12 +35,7 @@ const SignJSX = () => {
     const [error, setError] = useState(null);
     const { isLoading, user } = useContext(AuthContext);
     const navigate = useNavigate();
-    useEffect(() => {
-        // Si le chargement est terminé et que l'utilisateur est connecté, redirige
-        if (!isLoading && user) {
-            navigate('/');
-        }
-    }, [isLoading, user, navigate]);
+
     // Affiche un message de chargement pendant la vérification de l'authentification
     if (isLoading) {
         return <div>Chargement...</div>;
@@ -49,7 +44,7 @@ const SignJSX = () => {
     useEffect(() => {
         if (user) {
             navigate('/');
-            return null;
+
         }
     }, [user, navigate]);
 

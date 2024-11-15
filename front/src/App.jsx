@@ -23,6 +23,7 @@ import PrivateRoutes from "./utils/PrivateRoutes.jsx";
 import AdminRoutes from "./utils/AdminRoutes.jsx";
 import {useEffect, useContext, useState} from "react";
 import AuthContext from "./context/authContext.jsx";
+import HomeuserJSX from './components/home_user/HomeuserJSX.jsx';
 
 function App() {
     const [count, setCount] = useState(0)
@@ -89,6 +90,10 @@ function App() {
                 <Route path="/StatisitiquesJSX" element={<StatisitiquesJSX/>}/>
                 <Route path="/ProfilJSX" element={<ProfilJSX/>}/>
                 <Route path="/SubscriptionJSX" element={<SubscriptionJSX/>}/>
+                <Route path="/HomeuserJSX" element={<HomeuserJSX/>}/>
+                
+                
+
             </Routes>
 
         </>
